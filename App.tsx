@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
@@ -8,10 +7,14 @@ import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
 import { kaomojiData } from './constants/kaomoji';
 import type { Kaomoji, KaomojiCategory } from './types';
+import { AdsenseAd } from './components/AdsenseAd';
+import { InterstitialAd } from './components/InterstitialAd';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
+  const [showInterstitial, setShowInterstitial] = useState(false);
+  const [kaomojiForDetail, setKaomojiForDetail] = useState<Kaomoji | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
@@ -39,8 +42,17 @@ const App: React.FC = () => {
   }, [searchTerm]);
 
   const handleSelectKaomoji = (kaomoji: Kaomoji) => {
-    setSelectedKaomoji(kaomoji);
-    window.scrollTo(0, 0); // Scroll to top on view change
+    setKaomojiForDetail(kaomoji);
+    setShowInterstitial(true);
+  };
+
+  const handleInterstitialClose = () => {
+    setShowInterstitial(false);
+    if (kaomojiForDetail) {
+      setSelectedKaomoji(kaomojiForDetail);
+      setKaomojiForDetail(null);
+      window.scrollTo(0, 0); // Scroll to top on view change
+    }
   };
 
   const handleGoBack = () => {
@@ -52,36 +64,60 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900 text-white font-sans">
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <Header />
-        
-        <div className="my-12">
-           <Generator />
-        </div>
+    <div className="relative">
+      {/* Left Sidebar Ad */}
+      <aside className="hidden xl:block fixed left-4 top-20 w-40 h-[600px]">
+        <AdsenseAd 
+          client="ca-pub-3685000706717214" 
+          slot="1111111111" // Placeholder slot for left rail
+          style={{ width: '160px', height: '600px' }}
+        />
+      </aside>
 
-        <div className="my-12">
-          <h2 className="text-3xl font-bold text-center mb-2 text-cyan-400">Discover Kaomoji</h2>
-          <p className="text-center text-slate-400 mb-6">Search our collection or browse by category.</p>
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <div className="max-w-lg mx-auto mt-4 text-center">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {exampleSearches.map((term) => (
-                <button
-                  key={term}
-                  onClick={() => setSearchTerm(term)}
-                  className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
-                >
-                  {term}
-                </button>
-              ))}
+      {/* Main Content */}
+      <div className="flex flex-col min-h-screen bg-slate-900 text-white font-sans w-full max-w-7xl mx-auto">
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <Header />
+          
+          <div className="my-12">
+            <Generator />
+          </div>
+
+          <div className="my-12">
+            <h2 className="text-3xl font-bold text-center mb-2 text-cyan-400">Discover Kaomoji</h2>
+            <p className="text-center text-slate-400 mb-6">Search our collection or browse by category.</p>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <div className="max-w-lg mx-auto mt-4 text-center">
+              <div className="flex flex-wrap gap-2 justify-center">
+                {exampleSearches.map((term) => (
+                  <button
+                    key={term}
+                    onClick={() => setSearchTerm(term)}
+                    className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
+                  >
+                    {term}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        
-        <KaomojiGrid categories={filteredKaomojis} onKaomojiSelect={handleSelectKaomoji} />
-      </main>
-      <Footer />
+          
+          <KaomojiGrid categories={filteredKaomojis} onKaomojiSelect={handleSelectKaomoji} />
+        </main>
+        <Footer />
+      </div>
+
+      {/* Right Sidebar Ad */}
+      <aside className="hidden xl:block fixed right-4 top-20 w-40 h-[600px]">
+        <AdsenseAd 
+          client="ca-pub-3685000706717214" 
+          slot="2222222222" // Placeholder slot for right rail
+          style={{ width: '160px', height: '600px' }}
+        />
+      </aside>
+      
+      {/* Interstitial Ad Overlay */}
+      {showInterstitial && <InterstitialAd onClose={handleInterstitialClose} />}
     </div>
   );
 };
