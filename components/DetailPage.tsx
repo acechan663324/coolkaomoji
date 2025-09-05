@@ -4,7 +4,7 @@ import { kaomojiData } from '../constants/kaomoji';
 import type { Kaomoji } from '../types';
 import { KaomojiCard } from './KaomojiCard';
 import { Footer } from './Footer';
-import { AdsenseAd } from './AdsenseAd';
+import { Generator } from './Generator';
 
 interface DetailPageProps {
   kaomoji: Kaomoji;
@@ -84,72 +84,59 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     );
 
     return (
-        <div className="relative">
-             {/* Left Sidebar Ad */}
-            <aside className="hidden xl:block fixed left-4 top-20 w-40 h-[600px]">
-                <AdsenseAd 
-                    client="ca-pub-3685000706717214" 
-                    slot="1111111111" // Placeholder slot for left rail
-                    style={{ width: '160px', height: '600px' }}
-                />
-            </aside>
+        <div className="bg-slate-900 text-white font-sans">
+            <div className="container mx-auto px-4 py-8">
+                <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Left Column (Detail Content) */}
+                    <div className="lg:col-span-3 animate-fade-in">
+                        <header className="mb-8">
+                            <button onClick={onBack} className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors duration-200 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                                </svg>
+                                Back to Search
+                            </button>
+                        </header>
 
-            <div className="flex flex-col min-h-screen bg-slate-900 text-white font-sans w-full max-w-7xl mx-auto">
-                <main className="flex-grow container mx-auto px-4 py-8 animate-fade-in">
-                    <header className="mb-8">
-                        <button onClick={onBack} className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors duration-200 group">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                            </svg>
-                            Back to Search
-                        </button>
-                    </header>
-
-                    <section className="text-center mb-12">
-                        <h1 className="text-3xl font-bold text-slate-200 mb-2">{kaomoji.name}</h1>
-                        <div className="max-w-md mx-auto">
-                        {renderCard(kaomoji.value, "main")}
-                        </div>
-                    </section>
-
-                    <section className="mb-12">
-                        <h2 className="text-2xl font-semibold mb-4 text-fuchsia-400 border-b-2 border-slate-700 pb-2">AI-Generated Variations</h2>
-                        {isLoading && (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
-                            </div>
-                        )}
-                        {error && <p className="text-red-400 text-center py-4">{error}</p>}
-                        {!isLoading && !error && variations.length > 0 && (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                {variations.map((v, i) => renderCard(v, i))}
-                            </div>
-                        )}
-                        {!isLoading && !error && variations.length === 0 && (
-                            <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
-                        )}
-                    </section>
-
-                    {relatedKaomoji.length > 0 && (
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-4 text-cyan-300 border-b-2 border-slate-700 pb-2">Related Kaomoji</h2>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                {relatedKaomoji.map((k) => renderCard(k.value, k.value))}
-                            </div>
+                        <section className="text-center mb-12">
+                            <h1 className="text-3xl font-bold text-slate-200 mb-2">{kaomoji.name}</h1>
+                            {renderCard(kaomoji.value, "main")}
                         </section>
-                    )}
-                </main>
-                <Footer />
-            </div>
 
-            {/* Right Sidebar Ad */}
-            <aside className="hidden xl:block fixed right-4 top-20 w-40 h-[600px]">
-                <AdsenseAd 
-                    client="ca-pub-3685000706717214" 
-                    slot="2222222222" // Placeholder slot for right rail
-                    style={{ width: '160px', height: '600px' }}
-                />
-            </aside>
+                        <section className="mb-12">
+                            <h2 className="text-2xl font-semibold mb-4 text-fuchsia-400 border-b-2 border-slate-700 pb-2">AI-Generated Variations</h2>
+                            {isLoading && (
+                                <div className="flex flex-wrap items-start justify-start gap-4">
+                                    {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+                                </div>
+                            )}
+                            {error && <p className="text-red-400 text-center py-4">{error}</p>}
+                            {!isLoading && !error && variations.length > 0 && (
+                                <div className="flex flex-wrap items-start justify-start gap-4">
+                                    {variations.map((v, i) => renderCard(v, i))}
+                                </div>
+                            )}
+                            {!isLoading && !error && variations.length === 0 && (
+                                <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
+                            )}
+                        </section>
+
+                        {relatedKaomoji.length > 0 && (
+                            <section>
+                                <h2 className="text-2xl font-semibold mb-4 text-cyan-300 border-b-2 border-slate-700 pb-2">Related Kaomoji</h2>
+                                <div className="flex flex-wrap items-start justify-start gap-4">
+                                    {relatedKaomoji.map((k) => renderCard(k.value, k.value))}
+                                </div>
+                            </section>
+                        )}
+                    </div>
+                    {/* Right Sidebar (Generator) */}
+                    <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
+                        <Generator />
+                    </aside>
+                </main>
+            </div>
+            <Footer />
         </div>
     );
 };

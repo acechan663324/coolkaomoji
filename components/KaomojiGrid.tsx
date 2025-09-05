@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { KaomojiCard } from './KaomojiCard';
 import type { Kaomoji, KaomojiCategory } from '../types';
@@ -25,7 +24,7 @@ export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiS
           <h3 className="text-2xl font-semibold mb-4 text-cyan-300 border-b-2 border-slate-700 pb-2">
             {category.category}
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="flex flex-wrap items-start justify-start gap-4">
             {category.kaomojis.map((kaomoji) => (
               <KaomojiCard 
                 key={`${category.category}-${kaomoji.value}`} 

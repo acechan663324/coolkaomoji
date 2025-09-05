@@ -7,7 +7,6 @@ import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
 import { kaomojiData } from './constants/kaomoji';
 import type { Kaomoji, KaomojiCategory } from './types';
-import { AdsenseAd } from './components/AdsenseAd';
 import { InterstitialAd } from './components/InterstitialAd';
 
 const App: React.FC = () => {
@@ -71,57 +70,43 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="relative">
-      {/* Left Sidebar Ad */}
-      <aside className="hidden xl:block fixed left-4 top-20 w-40 h-[600px]">
-        <AdsenseAd 
-          client="ca-pub-3685000706717214" 
-          slot="1111111111" // Placeholder slot for left rail
-          style={{ width: '160px', height: '600px' }}
-        />
-      </aside>
+    <div className="bg-slate-900 text-white font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <Header />
 
-      {/* Main Content */}
-      <div className="flex flex-col min-h-screen bg-slate-900 text-white font-sans w-full max-w-7xl mx-auto">
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <Header />
-          
-          <div className="my-12">
-            <Generator />
-          </div>
-
-          <div className="my-12">
-            <h2 className="text-3xl font-bold text-center mb-2 text-cyan-400">Discover Kaomoji</h2>
-            <p className="text-center text-slate-400 mb-6">Search our collection or browse by category.</p>
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <div className="max-w-lg mx-auto mt-4 text-center">
-              <div className="flex flex-wrap gap-2 justify-center">
-                {exampleSearches.map((term) => (
-                  <button
-                    key={term}
-                    onClick={() => setSearchTerm(term)}
-                    className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
-                  >
-                    {term}
-                  </button>
-                ))}
+        <main className="mt-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content Column */}
+          <div className="lg:col-span-3 space-y-10">
+            <section>
+              <h2 className="text-3xl font-bold text-center mb-2 text-cyan-400">Discover Kaomoji</h2>
+              <p className="text-center text-slate-400 mb-6">Search our collection or browse by category.</p>
+              <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+              <div className="max-w-lg mx-auto mt-4 text-center">
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {exampleSearches.map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setSearchTerm(term)}
+                      className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            </section>
+            
+            <KaomojiGrid categories={filteredKaomojis} onKaomojiSelect={handleSelectKaomoji} />
           </div>
           
-          <KaomojiGrid categories={filteredKaomojis} onKaomojiSelect={handleSelectKaomoji} />
+          {/* Right Sidebar */}
+          <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
+            <Generator />
+          </aside>
         </main>
-        <Footer />
       </div>
-
-      {/* Right Sidebar Ad */}
-      <aside className="hidden xl:block fixed right-4 top-20 w-40 h-[600px]">
-        <AdsenseAd 
-          client="ca-pub-3685000706717214" 
-          slot="2222222222" // Placeholder slot for right rail
-          style={{ width: '160px', height: '600px' }}
-        />
-      </aside>
+      
+      <Footer />
       
       {/* Interstitial Ad Overlay */}
       {showInterstitial && <InterstitialAd onClose={handleInterstitialClose} />}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { generateKaomoji } from '../services/geminiService';
 import { KaomojiCard } from './KaomojiCard';
@@ -59,75 +58,65 @@ export const Generator: React.FC = () => {
   };
 
   return (
-    <section className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 md:p-8">
-      <h2 className="text-3xl font-bold text-center mb-2 text-fuchsia-400">Create with AI</h2>
-      <p className="text-center text-slate-400 mb-6">Describe the kaomoji you want to create.</p>
+    <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 shadow-lg">
+      <h2 className="text-3xl font-bold text-center mb-2 text-fuchsia-400">AI Kaomoji Generator</h2>
+      <p className="text-center text-slate-400 mb-6">Describe a kaomoji and let AI bring it to life!</p>
       
-      <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+      <div className="space-y-4">
         <input
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="e.g., a happy cat drinking coffee"
+          placeholder="e.g., 'a cat hiding in a box'"
+          className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-300"
           disabled={isLoading}
-          className="flex-grow w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-300 disabled:opacity-50"
         />
         <button
           onClick={() => handleGenerate()}
           disabled={isLoading || !prompt.trim()}
-          className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-fuchsia-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+          className="w-full px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 disabled:bg-slate-600 disabled:cursor-not-allowed transition duration-300 flex items-center justify-center gap-2"
         >
-          {isLoading ? (
-             <LoadingSpinner />
-          ) : (
-            'Generate'
-          )}
+          {isLoading ? <LoadingSpinner /> : 'Generate'}
         </button>
       </div>
-      
-      <div className="max-w-2xl mx-auto mt-4 text-center">
-        <p className="text-sm text-slate-500 mb-2">
-            Try an example:
-        </p>
+
+      <div className="mt-4 text-center">
         <div className="flex flex-wrap gap-2 justify-center">
-            {examplePrompts.map((p) => (
-                <button
-                    key={p}
-                    onClick={() => handleGenerate(p)}
-                    disabled={isLoading}
-                    className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {p}
-                </button>
-            ))}
+          <span className="text-slate-400 text-sm self-center">Try an example:</span>
+          {examplePrompts.map((p) => (
+            <button
+              key={p}
+              onClick={() => handleGenerate(p)}
+              className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
+              disabled={isLoading}
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="mt-6 min-h-[120px] flex items-center justify-center">
-        {error && (
-          <div className="text-center text-red-400 bg-red-900/50 border border-red-700 rounded-lg p-4">
-            <p className="font-bold">Oops! Something went wrong.</p>
-            <p>{error}</p>
-          </div>
-        )}
+      <div className="mt-6 min-h-[112px] flex items-center justify-center bg-slate-900/50 rounded-lg p-4">
+        {isLoading && <LoadingSpinner />}
+        {error && <p className="text-red-400 text-center">{error}</p>}
         {generatedKaomoji && (
-          <div className="w-full max-w-xs animate-fade-in">
-            {/* FIX: Added onClick handler to copy kaomoji and display "Copied!" message. */}
-            <KaomojiCard
-              kaomoji={generatedKaomoji}
-              onClick={handleCopy}
-              title="Click to copy"
-            >
-              {copied && (
+           <KaomojiCard
+            kaomoji={generatedKaomoji}
+            onClick={handleCopy}
+            title="Click to copy"
+          >
+            {copied && (
                 <span className="text-cyan-400 font-bold transition-opacity duration-300 opacity-100">
-                  Copied!
+                    Copied!
                 </span>
-              )}
-            </KaomojiCard>
-          </div>
+            )}
+          </KaomojiCard>
+        )}
+        {!isLoading && !error && !generatedKaomoji && (
+          <p className="text-slate-500">Your generated kaomoji will appear here...</p>
         )}
       </div>
-    </section>
+    </div>
   );
 };
