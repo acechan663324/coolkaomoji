@@ -19,9 +19,10 @@ const SkeletonCard: React.FC = () => (
 
 export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     const [variations, setVariations] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [copiedValue, setCopiedValue] = useState<string | null>(null);
+    const [generationAttempted, setGenerationAttempted] = useState(false);
 
     useEffect(() => {
         // Set a dynamic, SEO-friendly title for the page
@@ -34,23 +35,19 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
         };
       }, [kaomoji]);
 
-
-    useEffect(() => {
-        const fetchVariations = async () => {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const result = await generateKaomojiVariations(kaomoji.value);
-                setVariations(result);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchVariations();
-    }, [kaomoji.value]);
+    const handleGenerateVariations = async () => {
+        setGenerationAttempted(true);
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await generateKaomojiVariations(kaomoji.value);
+            setVariations(result);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const relatedKaomoji = useMemo(() => {
         const category = kaomojiData.find(cat => cat.kaomojis.some(k => k.value === kaomoji.value));
@@ -105,19 +102,36 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
 
                         <section className="mb-12">
                             <h2 className="text-2xl font-semibold mb-4 text-fuchsia-400 border-b-2 border-slate-700 pb-2">AI-Generated Variations</h2>
+                            
+                            {!generationAttempted && !isLoading && (
+                                <div className="text-center py-4">
+                                    <button
+                                        onClick={handleGenerateVariations}
+                                        className="px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 transition duration-300"
+                                    >
+                                        Generate by AI
+                                    </button>
+                                </div>
+                            )}
+
                             {isLoading && (
                                 <div className="flex flex-wrap items-start justify-start gap-4">
                                     {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
                                 </div>
                             )}
-                            {error && <p className="text-red-400 text-center py-4">{error}</p>}
-                            {!isLoading && !error && variations.length > 0 && (
-                                <div className="flex flex-wrap items-start justify-start gap-4">
-                                    {variations.map((v, i) => renderCard(v, i))}
-                                </div>
-                            )}
-                            {!isLoading && !error && variations.length === 0 && (
-                                <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
+                            
+                            {generationAttempted && !isLoading && (
+                                <>
+                                    {error && <p className="text-red-400 text-center py-4">{error}</p>}
+                                    {!error && variations.length > 0 && (
+                                        <div className="flex flex-wrap items-start justify-start gap-4">
+                                            {variations.map((v, i) => renderCard(v, i))}
+                                        </div>
+                                    )}
+                                    {!error && variations.length === 0 && (
+                                        <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
+                                    )}
+                                </>
                             )}
                         </section>
 

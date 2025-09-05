@@ -78,11 +78,9 @@ const App: React.FC = () => {
           {/* Main Content Column */}
           <div className="lg:col-span-3 space-y-10">
             <section>
-              <h2 className="text-3xl font-bold text-center mb-2 text-cyan-400">Discover Kaomoji</h2>
-              <p className="text-center text-slate-400 mb-6">Search our collection or browse by category.</p>
               <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-              <div className="max-w-lg mx-auto mt-4 text-center">
-                <div className="flex flex-wrap gap-2 justify-center">
+              <div className="mt-4">
+                <div className="flex flex-wrap gap-2 justify-start">
                   {exampleSearches.map((term) => (
                     <button
                       key={term}

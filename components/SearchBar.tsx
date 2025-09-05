@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface SearchBarProps {
@@ -8,7 +7,7 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div className="relative max-w-lg mx-auto">
+    <div className="relative">
       <span className="absolute inset-y-0 left-0 flex items-center pl-3">
         <svg
           className="w-5 h-5 text-slate-400"
