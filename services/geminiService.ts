@@ -42,3 +42,40 @@ export const generateKaomoji = async (prompt: string): Promise<string> => {
     throw new Error("Failed to generate kaomoji. Please try again.");
   }
 };
+
+export const generateKaomojiVariations = async (baseKaomoji: string): Promise<string[]> => {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Generate 4 creative variations based on the kaomoji: "${baseKaomoji}". Your response must be a JSON object with a single key "variations", which is an array of strings, each string being a new kaomoji. Do not include the original kaomoji.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            variations: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.STRING,
+                description: "A new kaomoji variation."
+              },
+            },
+          },
+        },
+        temperature: 0.8,
+      },
+    });
+
+    const jsonString = response.text.trim();
+    const result = JSON.parse(jsonString);
+
+    if (result && result.variations && Array.isArray(result.variations)) {
+      return result.variations.filter((v: any) => typeof v === 'string' && v.length > 1);
+    } else {
+      throw new Error("Invalid response format from API.");
+    }
+  } catch (error) {
+    console.error("Error generating kaomoji variations:", error);
+    throw new Error("Failed to generate kaomoji variations. Please try again.");
+  }
+};

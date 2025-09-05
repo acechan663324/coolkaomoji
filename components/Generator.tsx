@@ -12,16 +12,30 @@ export const Generator: React.FC = () => {
   const [generatedKaomoji, setGeneratedKaomoji] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const handleGenerate = async () => {
-    if (!prompt.trim() || isLoading) return;
+  const examplePrompts = [
+    'wizard casting a spell',
+    'surprised owl',
+    'robot DJ',
+    'person bowing respectfully',
+  ];
+
+  const handleGenerate = async (promptOverride?: string) => {
+    const finalPrompt = promptOverride || prompt;
+    if (!finalPrompt.trim() || isLoading) return;
+    
+    if(promptOverride) {
+      setPrompt(finalPrompt);
+    }
 
     setIsLoading(true);
     setError(null);
     setGeneratedKaomoji(null);
+    setCopied(false);
 
     try {
-      const result = await generateKaomoji(prompt);
+      const result = await generateKaomoji(finalPrompt);
       setGeneratedKaomoji(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
@@ -35,6 +49,14 @@ export const Generator: React.FC = () => {
       handleGenerate();
     }
   }
+
+  const handleCopy = () => {
+    if (generatedKaomoji) {
+      navigator.clipboard.writeText(generatedKaomoji);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <section className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 md:p-8">
@@ -52,7 +74,7 @@ export const Generator: React.FC = () => {
           className="flex-grow w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-300 disabled:opacity-50"
         />
         <button
-          onClick={handleGenerate}
+          onClick={() => handleGenerate()}
           disabled={isLoading || !prompt.trim()}
           className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-fuchsia-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
         >
@@ -62,6 +84,24 @@ export const Generator: React.FC = () => {
             'Generate'
           )}
         </button>
+      </div>
+      
+      <div className="max-w-2xl mx-auto mt-4 text-center">
+        <p className="text-sm text-slate-500 mb-2">
+            Try an example:
+        </p>
+        <div className="flex flex-wrap gap-2 justify-center">
+            {examplePrompts.map((p) => (
+                <button
+                    key={p}
+                    onClick={() => handleGenerate(p)}
+                    disabled={isLoading}
+                    className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {p}
+                </button>
+            ))}
+        </div>
       </div>
 
       <div className="mt-6 min-h-[120px] flex items-center justify-center">
@@ -73,7 +113,18 @@ export const Generator: React.FC = () => {
         )}
         {generatedKaomoji && (
           <div className="w-full max-w-xs animate-fade-in">
-             <KaomojiCard kaomoji={generatedKaomoji} />
+            {/* FIX: Added onClick handler to copy kaomoji and display "Copied!" message. */}
+            <KaomojiCard
+              kaomoji={generatedKaomoji}
+              onClick={handleCopy}
+              title="Click to copy"
+            >
+              {copied && (
+                <span className="text-cyan-400 font-bold transition-opacity duration-300 opacity-100">
+                  Copied!
+                </span>
+              )}
+            </KaomojiCard>
           </div>
         )}
       </div>
