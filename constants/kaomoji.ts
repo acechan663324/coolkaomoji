@@ -13,6 +13,8 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Excited', value: 'ヽ(・∀・)ﾉ' },
       { name: 'Beaming', value: '(★ω★)' },
       { name: 'Content', value: '(´｡• ᵕ •｡`)' },
+      { name: 'Sparkling', value: 'キラキラ(☆∀☆)' },
+      { name: 'Thumbs Up', value: '(b^ω^)b' },
     ],
   },
   {
@@ -25,6 +27,8 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Tears', value: '(´;ω;`)' },
       { name: 'Heartbroken', value: '(╯︵╰,)' },
       { name: 'Gloomy', value: '（；＿；）' },
+      { name: 'Giving Up', value: '／(^o^)＼' },
+      { name: 'Trembling', value: '((´д｀))' },
     ],
   },
   {
@@ -37,6 +41,8 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Annoyed', value: '(-`д´-)' },
       { name: 'Pissed', value: '(`⌒´メ)' },
       { name: 'Mad', value: '(╬ Ò﹏Ó)' },
+      { name: 'Dual Table Flip', value: '┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻' },
+      { name: 'Grumpy', value: '(￣^￣)' },
     ],
   },
   {
@@ -49,6 +55,8 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Wink', value: '(^_-)' },
       { name: 'In Love', value: '(*♡∀♡)' },
       { name: 'Adore', value: '(´,,•ω•,,)♡' },
+      { name: 'Giving Flower', value: '( ´ ∀ ` )ノ～ ♡' },
+      { name: 'Heart Eyes', value: '(♥ω♥*)' },
     ],
   },
   {
@@ -62,6 +70,10 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Waving', value: '( ´ ▽ ` )ﾉ' },
       { name: 'Apologizing', value: 'm(_ _)m' },
       { name: 'Thinking', value: '(・－・)?' },
+      { name: 'Binoculars', value: '(◎ ◎)ゞ' },
+      { name: 'Salute', value: '(￣^￣)ゞ' },
+      { name: 'Facepalm', value: '(－‸ლ)' },
+      { name: 'Whistling', value: '(・ε・)' },
     ],
   },
   {
@@ -75,6 +87,8 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Bird', value: '（・⊝・）' },
       { name: 'Fish', value: '<・)))><<' },
       { name: 'Owl', value: '(・o・)' },
+      { name: 'Spider', value: '/╲/\\╭(•‿•)╮/\\╱\\' },
+      { name: 'Squid', value: '＜コ：ミ' },
     ],
   },
   {
@@ -88,6 +102,12 @@ export const kaomojiData: KaomojiCategory[] = [
       { name: 'Cool Glasses', value: '(⌐■_■)' },
       { name: 'Meh', value: '┐(￣ヘ￣)┌' },
       { name: 'Whatever', value: '╮( ˘ ､ ˘ )╭' },
+      { name: 'Disapproval', value: '( ¬_¬)' },
+      { name: 'Money', value: '[̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅]' },
+      { name: 'Nervous', value: '(⌒_⌒;)' },
+      { name: 'Worried', value: '(・_・;)' },
+      { name: 'Music', value: 'ヽ(⌐■_■)ノ♪♬' },
+      { name: 'Peace Sign', value: '(✌ﾟ∀ﾟ)☞' },
     ],
   },
 ];

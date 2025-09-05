@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
 import { KaomojiGrid } from './components/KaomojiGrid';
@@ -17,6 +17,13 @@ const App: React.FC = () => {
   const [kaomojiForDetail, setKaomojiForDetail] = useState<Kaomoji | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
+
+  useEffect(() => {
+    // Set the default title when on the main page, or when returning to it.
+    if (!selectedKaomoji) {
+      document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
+    }
+  }, [selectedKaomoji]);
 
   const filteredKaomojis = useMemo<KaomojiCategory[]>(() => {
     if (!searchTerm.trim()) {

@@ -24,6 +24,18 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     const [copiedValue, setCopiedValue] = useState<string | null>(null);
 
     useEffect(() => {
+        // Set a dynamic, SEO-friendly title for the page
+        const originalTitle = document.title;
+        document.title = `${kaomoji.name} ${kaomoji.value} | Kaomoji World`;
+    
+        // Revert title on component unmount
+        return () => {
+          document.title = originalTitle;
+        };
+      }, [kaomoji]);
+
+
+    useEffect(() => {
         const fetchVariations = async () => {
             setIsLoading(true);
             setError(null);
