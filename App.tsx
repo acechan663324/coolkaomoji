@@ -7,13 +7,12 @@ import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
 import { kaomojiData } from './constants/kaomoji';
 import type { Kaomoji, KaomojiCategory } from './types';
-import { InterstitialAd } from './components/InterstitialAd';
+import { AdsenseAd } from './components/AdsenseAd';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
-  const [showInterstitial, setShowInterstitial] = useState(false);
-  const [kaomojiForDetail, setKaomojiForDetail] = useState<Kaomoji | null>(null);
+  const [copiedValue, setCopiedValue] = useState<string | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
@@ -48,17 +47,17 @@ const App: React.FC = () => {
   }, [searchTerm]);
 
   const handleSelectKaomoji = (kaomoji: Kaomoji) => {
-    setKaomojiForDetail(kaomoji);
-    setShowInterstitial(true);
-  };
+    if (copiedValue) return; // Prevent multiple clicks while feedback is shown
 
-  const handleInterstitialClose = () => {
-    setShowInterstitial(false);
-    if (kaomojiForDetail) {
-      setSelectedKaomoji(kaomojiForDetail);
-      setKaomojiForDetail(null);
-      window.scrollTo(0, 0); // Scroll to top on view change
-    }
+    navigator.clipboard.writeText(kaomoji.value);
+    setCopiedValue(kaomoji.value);
+
+    // Navigate after a short delay to show copy feedback
+    setTimeout(() => {
+        setCopiedValue(null);
+        setSelectedKaomoji(kaomoji);
+        window.scrollTo(0, 0); // Scroll to top on view change
+    }, 1000);
   };
 
   const handleGoBack = () => {
@@ -70,7 +69,17 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-slate-900 text-white font-sans">
+    <div className="bg-slate-900 text-white font-sans relative">
+       {/* Left Ad Sidebar */}
+      <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
+        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+      </aside>
+
+      {/* Right Ad Sidebar */}
+      <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px]">
+        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+      </aside>
+
       <div className="container mx-auto px-4 py-8">
         <Header />
 
@@ -94,7 +103,11 @@ const App: React.FC = () => {
               </div>
             </section>
             
-            <KaomojiGrid categories={filteredKaomojis} onKaomojiSelect={handleSelectKaomoji} />
+            <KaomojiGrid 
+              categories={filteredKaomojis} 
+              onKaomojiSelect={handleSelectKaomoji}
+              copiedValue={copiedValue}
+            />
           </div>
           
           {/* Right Sidebar */}
@@ -105,9 +118,6 @@ const App: React.FC = () => {
       </div>
       
       <Footer />
-      
-      {/* Interstitial Ad Overlay */}
-      {showInterstitial && <InterstitialAd onClose={handleInterstitialClose} />}
     </div>
   );
 };

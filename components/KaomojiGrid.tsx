@@ -5,9 +5,10 @@ import type { Kaomoji, KaomojiCategory } from '../types';
 interface KaomojiGridProps {
   categories: KaomojiCategory[];
   onKaomojiSelect: (kaomoji: Kaomoji) => void;
+  copiedValue: string | null;
 }
 
-export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiSelect }) => {
+export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiSelect, copiedValue }) => {
   if (categories.length === 0) {
     return (
       <div className="text-center text-slate-400 py-16">
@@ -31,7 +32,13 @@ export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiS
                 kaomoji={kaomoji.value} 
                 onClick={() => onKaomojiSelect(kaomoji)}
                 title={kaomoji.name}
-              />
+              >
+                {copiedValue === kaomoji.value && (
+                    <span className="text-cyan-400 font-bold transition-opacity duration-300 opacity-100">
+                        Copied!
+                    </span>
+                )}
+              </KaomojiCard>
             ))}
           </div>
         </section>

@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
@@ -77,5 +76,39 @@ export const generateKaomojiVariations = async (baseKaomoji: string): Promise<st
   } catch (error) {
     console.error("Error generating kaomoji variations:", error);
     throw new Error("Failed to generate kaomoji variations. Please try again.");
+  }
+};
+
+export const generateKaomojiDescription = async (kaomoji: string): Promise<string> => {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Generate a short, creative description for the kaomoji "${kaomoji}". Explain its likely meaning, emotion, and common usage scenarios in 1-2 sentences. Your response must be a JSON object with a single key "description" containing the description string.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            description: {
+              type: Type.STRING,
+              description: "The generated kaomoji description.",
+            },
+          },
+        },
+        temperature: 0.7,
+      },
+    });
+
+    const jsonString = response.text.trim();
+    const result = JSON.parse(jsonString);
+    
+    if (result && result.description && typeof result.description === 'string') {
+        return result.description;
+    } else {
+        throw new Error("Invalid response format from API for description.");
+    }
+  } catch (error) {
+    console.error("Error generating kaomoji description:", error);
+    throw new Error("Failed to generate description. Please try again.");
   }
 };

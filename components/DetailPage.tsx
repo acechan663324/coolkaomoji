@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { generateKaomojiVariations } from '../services/geminiService';
+import { generateKaomojiVariations, generateKaomojiDescription } from '../services/geminiService';
 import { kaomojiData } from '../constants/kaomoji';
 import type { Kaomoji } from '../types';
 import { KaomojiCard } from './KaomojiCard';
 import { Footer } from './Footer';
 import { Generator } from './Generator';
+import { AdsenseAd } from './AdsenseAd';
 
 interface DetailPageProps {
   kaomoji: Kaomoji;
@@ -23,6 +24,10 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     const [error, setError] = useState<string | null>(null);
     const [copiedValue, setCopiedValue] = useState<string | null>(null);
     const [generationAttempted, setGenerationAttempted] = useState(false);
+    
+    const [description, setDescription] = useState<string>('');
+    const [isDescriptionLoading, setIsDescriptionLoading] = useState(true);
+    const [descriptionError, setDescriptionError] = useState<string | null>(null);
 
     useEffect(() => {
         // Set a dynamic, SEO-friendly title for the page
@@ -33,7 +38,24 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
         return () => {
           document.title = originalTitle;
         };
-      }, [kaomoji]);
+    }, [kaomoji]);
+
+    useEffect(() => {
+        const fetchDescription = async () => {
+            setIsDescriptionLoading(true);
+            setDescriptionError(null);
+            try {
+                const desc = await generateKaomojiDescription(kaomoji.value);
+                setDescription(desc);
+            } catch (err) {
+                setDescriptionError(err instanceof Error ? err.message : 'An unknown error occurred.');
+            } finally {
+                setIsDescriptionLoading(false);
+            }
+        };
+    
+        fetchDescription();
+    }, [kaomoji.value]);
 
     const handleGenerateVariations = async () => {
         setGenerationAttempted(true);
@@ -81,7 +103,17 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     );
 
     return (
-        <div className="bg-slate-900 text-white font-sans">
+        <div className="bg-slate-900 text-white font-sans relative">
+            {/* Left Ad Sidebar */}
+            <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
+                <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+            </aside>
+
+            {/* Right Ad Sidebar */}
+            <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px]">
+                <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+            </aside>
+
             <div className="container mx-auto px-4 py-8">
                 <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     {/* Left Column (Detail Content) */}
@@ -98,6 +130,20 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
                         <section className="text-center mb-12">
                             <h1 className="text-3xl font-bold text-slate-200 mb-2">{kaomoji.name}</h1>
                             {renderCard(kaomoji.value, "main")}
+                        </section>
+
+                        <section className="mb-12">
+                            <h2 className="text-2xl font-semibold mb-4 text-cyan-400 border-b-2 border-slate-700 pb-2">About this Kaomoji</h2>
+                            {isDescriptionLoading && (
+                                <div className="animate-pulse space-y-2">
+                                    <div className="h-4 bg-slate-700 rounded w-full"></div>
+                                    <div className="h-4 bg-slate-700 rounded w-5/6"></div>
+                                </div>
+                            )}
+                            {descriptionError && <p className="text-red-400">{descriptionError}</p>}
+                            {!isDescriptionLoading && !descriptionError && (
+                                <p className="text-slate-300 leading-relaxed">{description}</p>
+                            )}
                         </section>
 
                         <section className="mb-12">

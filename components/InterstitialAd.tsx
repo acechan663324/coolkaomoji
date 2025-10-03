@@ -21,7 +21,7 @@ export const InterstitialAd: React.FC<InterstitialAdProps> = ({ onClose }) => {
         <div className="bg-white p-1 rounded-lg shadow-lg shadow-fuchsia-500/20">
              <AdsenseAd 
                 client="ca-pub-3685000706717214"
-                slot="3333333333" // Placeholder slot for interstitial
+                slot="2760671227" // Use valid ad slot
                 style={{ width: '300px', height: '250px' }} // Common interstitial size
              />
         </div>
