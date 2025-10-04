@@ -20,7 +20,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
   };
 
   return (
-    <nav className="sticky top-24 h-fit">
+    <nav>
       <h3 className="text-lg font-semibold text-slate-800 mb-4 tracking-wide">Categories</h3>
       <ul className="space-y-2 border-l-2 border-slate-200">
         {categories.map(category => (

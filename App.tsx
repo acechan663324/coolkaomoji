@@ -10,18 +10,26 @@ import type { Kaomoji, KaomojiTopCategory } from './types';
 import { AdsenseAd } from './components/AdsenseAd';
 import { Navigation } from './components/Navigation';
 import { CategorySidebar } from './components/CategorySidebar';
+import { HowToUsePage } from './components/HowToUsePage';
+import { BlogPage } from './components/BlogPage';
+import { EmojiPage } from './components/EmojiPage';
+import { SymbolPage } from './components/SymbolPage';
+import { KaomojiInfo } from './components/KaomojiInfo';
+
+type Page = 'home' | 'detail' | 'how-to-use' | 'blog' | 'emoji' | 'symbol';
 
 const App: React.FC = () => {
+  const [activePage, setActivePage] = useState<Page>('home');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
   useEffect(() => {
-    if (!selectedKaomoji) {
+    if (activePage !== 'detail') {
       document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
     }
-  }, [selectedKaomoji]);
+  }, [activePage]);
 
   const filteredKaomojis = useMemo<KaomojiTopCategory[]>(() => {
     if (!searchTerm.trim()) {
@@ -49,44 +57,57 @@ const App: React.FC = () => {
       .filter((category): category is KaomojiTopCategory => category !== null);
   }, [searchTerm]);
   
+  const handleNavigate = (page: Page) => {
+    setActivePage(page);
+    setSelectedKaomoji(null);
+    setSearchTerm('');
+    window.scrollTo(0, 0);
+  };
+  
   const handleGoToDetail = (kaomoji: Kaomoji) => {
     setSelectedKaomoji(kaomoji);
+    setActivePage('detail');
     window.scrollTo(0, 0);
   };
 
   const handleCopy = (value: string) => {
     navigator.clipboard.writeText(value);
-    // Visual feedback is now handled within KaomojiCard
   };
 
-  const handleGoHome = () => {
-    setSelectedKaomoji(null);
-    setSearchTerm('');
-    window.scrollTo(0, 0);
-  };
+  const renderPageContent = () => {
+    if (activePage === 'detail' && selectedKaomoji) {
+      return (
+        <DetailPage 
+          kaomoji={selectedKaomoji} 
+          onBack={() => handleNavigate('home')}
+          onKaomojiSelect={handleGoToDetail} 
+        />
+      );
+    }
 
-  const handleGoBackFromDetail = () => {
-    setSelectedKaomoji(null);
-  };
+    if (activePage === 'how-to-use') {
+      return <HowToUsePage onBack={() => handleNavigate('home')} />;
+    }
+    if (activePage === 'blog') {
+      return <BlogPage onBack={() => handleNavigate('home')} />;
+    }
+    if (activePage === 'emoji') {
+      return <EmojiPage onBack={() => handleNavigate('home')} />;
+    }
+    if (activePage === 'symbol') {
+      return <SymbolPage onBack={() => handleNavigate('home')} />;
+    }
 
-  let pageContent;
-
-  if (selectedKaomoji) {
-    pageContent = (
-      <DetailPage 
-        kaomoji={selectedKaomoji} 
-        onBack={handleGoBackFromDetail}
-        onKaomojiSelect={handleGoToDetail} 
-      />
-    );
-  } else {
-    // Main page content
-    pageContent = (
+    // Default to 'home' page
+    return (
       <>
         <Header />
         <main className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8">
           <aside className="hidden lg:block lg:col-span-1">
+            <div className="sticky top-24 h-fit">
               <CategorySidebar categories={filteredKaomojis} />
+              <KaomojiInfo />
+            </div>
           </aside>
 
           <div className="lg:col-span-3 space-y-10">
@@ -120,11 +141,11 @@ const App: React.FC = () => {
         </main>
       </>
     );
-  }
+  };
 
   return (
     <div className="bg-gray-50 text-slate-800 font-sans min-h-screen flex flex-col">
-       <Navigation onHomeClick={handleGoHome} />
+       <Navigation onNavigate={handleNavigate} />
 
        {/* Ad Sidebars - placed here to be relative to the viewport */}
       <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px] z-10">
@@ -135,7 +156,7 @@ const App: React.FC = () => {
       </aside>
 
       <div className="container mx-auto px-4 py-8 flex-grow">
-        {pageContent}
+        {renderPageContent()}
       </div>
       
       <Footer />

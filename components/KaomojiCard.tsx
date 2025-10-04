@@ -31,6 +31,8 @@ export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoT
         className="flex-grow w-full flex items-center justify-center cursor-pointer"
         onClick={handleGoToDetail}
         title={`View related for ${kaomoji.name}`}
+        role="button"
+        aria-label={`View details for ${kaomoji.name}`}
       >
         <span className="text-2xl font-mono whitespace-nowrap overflow-x-auto px-2">
           {kaomoji.value}
