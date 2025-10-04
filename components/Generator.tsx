@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { generateKaomoji } from '../services/geminiService';
 import { KaomojiCard } from './KaomojiCard';
+import type { Kaomoji } from '../types';
 
 const LoadingSpinner: React.FC = () => (
   <div className="w-8 h-8 border-4 border-slate-300 border-t-cyan-400 border-solid rounded-full animate-spin"></div>
@@ -8,10 +9,9 @@ const LoadingSpinner: React.FC = () => (
 
 export const Generator: React.FC = () => {
   const [prompt, setPrompt] = useState('');
-  const [generatedKaomoji, setGeneratedKaomoji] = useState<string | null>(null);
+  const [generatedKaomoji, setGeneratedKaomoji] = useState<Kaomoji | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const examplePrompts = [
     'wizard casting a spell',
@@ -31,11 +31,10 @@ export const Generator: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setGeneratedKaomoji(null);
-    setCopied(false);
 
     try {
       const result = await generateKaomoji(finalPrompt);
-      setGeneratedKaomoji(result);
+      setGeneratedKaomoji({ name: 'AI Generated', value: result });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
@@ -49,12 +48,8 @@ export const Generator: React.FC = () => {
     }
   }
 
-  const handleCopy = () => {
-    if (generatedKaomoji) {
-      navigator.clipboard.writeText(generatedKaomoji);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
   };
 
   return (
@@ -97,20 +92,16 @@ export const Generator: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 min-h-[112px] flex items-center justify-center bg-gray-100 rounded-lg p-4">
+      <div className="mt-6 min-h-[144px] flex items-center justify-center bg-gray-100 rounded-lg p-4">
         {isLoading && <LoadingSpinner />}
         {error && <p className="text-red-500 text-center">{error}</p>}
         {generatedKaomoji && (
            <KaomojiCard
             kaomoji={generatedKaomoji}
-            onClick={handleCopy}
-          >
-            {copied && (
-                <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
-                    Copied!
-                </span>
-            )}
-          </KaomojiCard>
+            onCopy={() => handleCopy(generatedKaomoji.value)}
+            onGoToDetail={() => { /* AI generated kaomojis do not have a detail page */ }}
+            className="w-48"
+          />
         )}
         {!isLoading && !error && !generatedKaomoji && (
           <p className="text-slate-400">Your generated kaomoji will appear here...</p>

@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { generateKaomojiVariations, generateKaomojiDescription } from '../services/geminiService';
 import { kaomojiData } from '../constants/kaomoji';
-import type { Kaomoji } from '../types';
+import type { Kaomoji, KaomojiSubCategory } from '../types';
 import { KaomojiCard } from './KaomojiCard';
-import { Footer } from './Footer';
 import { Generator } from './Generator';
-import { AdsenseAd } from './AdsenseAd';
 
 interface DetailPageProps {
   kaomoji: Kaomoji;
   onBack: () => void;
+  onKaomojiSelect: (kaomoji: Kaomoji) => void;
 }
 
 const SkeletonCard: React.FC = () => (
-    <div className="bg-white border border-slate-200 rounded-lg p-4 h-28 flex items-center justify-center animate-pulse">
+    <div className="bg-white border border-slate-200 rounded-lg p-4 h-36 w-full flex items-center justify-center animate-pulse">
         <div className="w-24 h-6 bg-slate-200 rounded-md"></div>
     </div>
 );
 
-export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
-    const [variations, setVariations] = useState<string[]>([]);
+export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack, onKaomojiSelect }) => {
+    const [variations, setVariations] = useState<Kaomoji[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [copiedValue, setCopiedValue] = useState<string | null>(null);
     const [generationAttempted, setGenerationAttempted] = useState(false);
     
     const [description, setDescription] = useState<string>('');
@@ -30,11 +28,9 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     const [descriptionError, setDescriptionError] = useState<string | null>(null);
 
     useEffect(() => {
-        // Set a dynamic, SEO-friendly title for the page
         const originalTitle = document.title;
         document.title = `${kaomoji.name} ${kaomoji.value} | Kaomoji World`;
     
-        // Revert title on component unmount
         return () => {
           document.title = originalTitle;
         };
@@ -55,6 +51,9 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
         };
     
         fetchDescription();
+        // Reset variations when kaomoji changes
+        setGenerationAttempted(false);
+        setVariations([]);
     }, [kaomoji.value]);
 
     const handleGenerateVariations = async () => {
@@ -63,7 +62,7 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
         setError(null);
         try {
             const result = await generateKaomojiVariations(kaomoji.value);
-            setVariations(result);
+            setVariations(result.map(v => ({ name: 'AI Variation', value: v })));
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred.');
         } finally {
@@ -72,144 +71,125 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     };
 
     const relatedKaomoji = useMemo(() => {
-        const category = kaomojiData.find(cat => cat.kaomojis.some(k => k.value === kaomoji.value));
-        if (!category) return [];
+        let foundCategory: KaomojiSubCategory | undefined;
+        for (const topCategory of kaomojiData) {
+            const subCat = topCategory.subCategories.find(sc => sc.kaomojis.some(k => k.value === kaomoji.value));
+            if (subCat) {
+                foundCategory = subCat;
+                break;
+            }
+        }
+        if (!foundCategory) return [];
 
-        return category.kaomojis
+        return foundCategory.kaomojis
             .filter(k => k.value !== kaomoji.value)
-            .sort(() => 0.5 - Math.random()) // shuffle
+            .sort(() => 0.5 - Math.random()) 
             .slice(0, 5);
     }, [kaomoji.value]);
 
     const handleCopy = (value: string) => {
         navigator.clipboard.writeText(value);
-        setCopiedValue(value);
-        setTimeout(() => setCopiedValue(null), 2000);
     };
 
-    const renderCard = (value: string, key: string | number, name?: string) => (
-        <KaomojiCard
-            key={key}
-            kaomoji={value}
-            onClick={() => handleCopy(value)}
-            title={name}
-        >
-            {copiedValue === value && (
-                <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
-                    Copied!
-                </span>
-            )}
-        </KaomojiCard>
-    );
-
     return (
-        <div className="bg-gray-50 text-slate-800 font-sans relative">
-            {/* Left Ad Sidebar */}
-            <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
-                <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-            </aside>
+        <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="lg:col-span-3 animate-fade-in">
+                <header className="mb-8">
+                    <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-cyan-600 transition-colors duration-200 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                        </svg>
+                        Back to Search
+                    </button>
+                </header>
 
-            {/* Right Ad Sidebar */}
-            <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px]">
-                <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-            </aside>
-
-            <div className="container mx-auto px-4 py-8">
-                <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* Left Column (Detail Content) */}
-                    <div className="lg:col-span-3 animate-fade-in">
-                        <header className="mb-8">
-                            <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-cyan-600 transition-colors duration-200 group">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                                </svg>
-                                Back to Search
-                            </button>
-                        </header>
-
-                        <section className="text-center mb-12">
-                            <h1 className="text-3xl font-bold text-slate-800 mb-2">{kaomoji.name}</h1>
-                            <div className="inline-block">
-                                <KaomojiCard
-                                    kaomoji={kaomoji.value}
-                                    onClick={() => handleCopy(kaomoji.value)}
-                                    className="h-32 w-64"
-                                    kaomojiClassName="text-4xl"
-                                >
-                                    {copiedValue === kaomoji.value && (
-                                        <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
-                                            Copied!
-                                        </span>
-                                    )}
-                                </KaomojiCard>
-                            </div>
-                        </section>
-
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">About this Kaomoji</h2>
-                            {isDescriptionLoading && (
-                                <div className="animate-pulse space-y-2">
-                                    <div className="h-4 bg-slate-200 rounded w-full"></div>
-                                    <div className="h-4 bg-slate-200 rounded w-5/6"></div>
-                                </div>
-                            )}
-                            {descriptionError && <p className="text-red-500">{descriptionError}</p>}
-                            {!isDescriptionLoading && !descriptionError && (
-                                <p className="text-slate-600 leading-relaxed">{description}</p>
-                            )}
-                        </section>
-
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4 text-fuchsia-500 border-b-2 border-slate-200 pb-2">AI-Generated Variations</h2>
-                            
-                            {!generationAttempted && !isLoading && (
-                                <div className="text-center py-4">
-                                    <button
-                                        onClick={handleGenerateVariations}
-                                        className="px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 transition duration-300"
-                                    >
-                                        Generate by AI
-                                    </button>
-                                </div>
-                            )}
-
-                            {isLoading && (
-                                <div className="flex flex-wrap items-start justify-start gap-4">
-                                    {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
-                                </div>
-                            )}
-                            
-                            {generationAttempted && !isLoading && (
-                                <>
-                                    {error && <p className="text-red-500 text-center py-4">{error}</p>}
-                                    {!error && variations.length > 0 && (
-                                        <div className="flex flex-wrap items-start justify-start gap-4">
-                                            {variations.map((v, i) => renderCard(v, i))}
-                                        </div>
-                                    )}
-                                    {!error && variations.length === 0 && (
-                                        <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
-                                    )}
-                                </>
-                            )}
-                        </section>
-
-                        {relatedKaomoji.length > 0 && (
-                            <section>
-                                <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">Related Kaomoji</h2>
-                                <div className="flex flex-wrap items-start justify-start gap-4">
-                                    {relatedKaomoji.map((k) => renderCard(k.value, k.value, k.name))}
-                                </div>
-                            </section>
-                        )}
+                <section className="text-center mb-12">
+                    <h1 className="text-3xl font-bold text-slate-800 mb-2">{kaomoji.name}</h1>
+                    <div className="inline-block w-64">
+                         <KaomojiCard
+                            kaomoji={kaomoji}
+                            onCopy={handleCopy}
+                            onGoToDetail={() => {}} // No need to go to detail from its own page
+                            className="h-40"
+                          />
                     </div>
-                    {/* Right Sidebar (Generator) */}
-                    <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
-                        <Generator />
-                    </aside>
-                </main>
+                </section>
+
+                <section className="mb-12">
+                    <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">About this Kaomoji</h2>
+                    {isDescriptionLoading && (
+                        <div className="animate-pulse space-y-2">
+                            <div className="h-4 bg-slate-200 rounded w-full"></div>
+                            <div className="h-4 bg-slate-200 rounded w-5/6"></div>
+                        </div>
+                    )}
+                    {descriptionError && <p className="text-red-500">{descriptionError}</p>}
+                    {!isDescriptionLoading && !descriptionError && (
+                        <p className="text-slate-600 leading-relaxed">{description}</p>
+                    )}
+                </section>
+
+                <section className="mb-12">
+                    <h2 className="text-2xl font-semibold mb-4 text-fuchsia-500 border-b-2 border-slate-200 pb-2">AI-Generated Variations</h2>
+                    
+                    {!generationAttempted && !isLoading && (
+                        <div className="text-center py-4">
+                            <button
+                                onClick={handleGenerateVariations}
+                                className="px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 transition duration-300"
+                            >
+                                Generate with AI
+                            </button>
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+                        </div>
+                    )}
+                    
+                    {generationAttempted && !isLoading && (
+                        <>
+                            {error && <p className="text-red-500 text-center py-4">{error}</p>}
+                            {!error && variations.length > 0 && (
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {variations.map((v, i) => (
+                                       <KaomojiCard 
+                                          key={i}
+                                          kaomoji={v}
+                                          onCopy={handleCopy}
+                                          onGoToDetail={() => {}} // No detail page for AI variations
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                            {!error && variations.length === 0 && (
+                                <p className="text-slate-500 text-center py-4">Could not generate variations for this kaomoji.</p>
+                            )}
+                        </>
+                    )}
+                </section>
+
+                {relatedKaomoji.length > 0 && (
+                    <section>
+                        <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">Related Kaomoji</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            {relatedKaomoji.map((k) => (
+                               <KaomojiCard 
+                                  key={k.value}
+                                  kaomoji={k}
+                                  onCopy={handleCopy}
+                                  onGoToDetail={onKaomojiSelect}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
-            <Footer />
-        </div>
+            <aside className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
+                <Generator />
+            </aside>
+        </main>
     );
 };

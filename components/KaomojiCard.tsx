@@ -1,36 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
+import type { Kaomoji } from '../types';
 
 interface KaomojiCardProps {
-  kaomoji: string;
-  onClick: () => void;
-  children?: React.ReactNode;
+  kaomoji: Kaomoji;
+  onCopy: (value: string) => void;
+  onGoToDetail: (kaomoji: Kaomoji) => void;
   className?: string;
-  title?: string;
-  kaomojiClassName?: string;
 }
 
-export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onClick, children, className, title, kaomojiClassName }) => {
+export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoToDetail, className }) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering other click events
+    onCopy(kaomoji.value);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+  
+  const handleGoToDetail = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onGoToDetail(kaomoji);
+  };
+
   return (
     <div
-      onClick={onClick}
-      className={`bg-white border border-slate-200 rounded-lg h-28 flex flex-col items-center justify-center p-2 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:bg-slate-100 hover:shadow-lg hover:shadow-cyan-500/20 relative max-w-full text-center ${className}`}
-      title={title || kaomoji}
+      className={`bg-white border border-slate-200 rounded-lg h-36 flex flex-col items-center justify-between p-3 text-center transition-shadow duration-300 hover:shadow-lg hover:shadow-cyan-500/10 ${className}`}
     >
-      <div className="relative flex-grow flex items-center justify-center w-full">
-        <span className={`transition-opacity duration-300 text-xl sm:text-2xl font-mono whitespace-nowrap overflow-x-auto px-2 ${children ? 'opacity-0' : 'opacity-100'} ${kaomojiClassName || ''}`}>
-          {kaomoji}
+      <div 
+        className="flex-grow w-full flex items-center justify-center cursor-pointer"
+        onClick={handleGoToDetail}
+        title={`View related for ${kaomoji.name}`}
+      >
+        <span className="text-2xl font-mono whitespace-nowrap overflow-x-auto px-2">
+          {kaomoji.value}
         </span>
-        {children && (
-           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-               {children}
-           </div>
-        )}
       </div>
-      {title && (
-        <span className="text-xs text-slate-500 mt-1 truncate w-full px-1">
-          {title}
+      <div className="w-full">
+         <span className="text-sm text-slate-600 mt-1 truncate w-full block h-5">
+          {kaomoji.name}
         </span>
-      )}
+        <div className="grid grid-cols-2 gap-2 mt-2 text-xs font-semibold">
+          <button
+            onClick={handleGoToDetail}
+            className="w-full py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors duration-200"
+          >
+            Related
+          </button>
+          <button
+            onClick={handleCopy}
+            className={`w-full py-1.5 rounded-md transition-colors duration-200 ${
+              isCopied
+                ? 'bg-emerald-500 text-white'
+                : 'bg-cyan-500 text-white hover:bg-cyan-600'
+            }`}
+          >
+            {isCopied ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,26 +5,25 @@ import { KaomojiGrid } from './components/KaomojiGrid';
 import { Generator } from './components/Generator';
 import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
-import { CategoryPage } from './components/CategoryPage';
 import { kaomojiData } from './constants/kaomoji';
-import type { Kaomoji, KaomojiCategory } from './types';
+import type { Kaomoji, KaomojiTopCategory } from './types';
 import { AdsenseAd } from './components/AdsenseAd';
+import { Navigation } from './components/Navigation';
+import { CategorySidebar } from './components/CategorySidebar';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<KaomojiCategory | null>(null);
-  const [copiedValue, setCopiedValue] = useState<string | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
   useEffect(() => {
-    if (!selectedKaomoji && !selectedCategory) {
+    if (!selectedKaomoji) {
       document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
     }
-  }, [selectedKaomoji, selectedCategory]);
+  }, [selectedKaomoji]);
 
-  const filteredKaomojis = useMemo<KaomojiCategory[]>(() => {
+  const filteredKaomojis = useMemo<KaomojiTopCategory[]>(() => {
     if (!searchTerm.trim()) {
       return kaomojiData;
     }
@@ -32,82 +31,64 @@ const App: React.FC = () => {
     const lowercasedFilter = searchTerm.toLowerCase();
     
     return kaomojiData
-      .map(category => {
-        const filtered = category.kaomojis.filter(
-          kaomoji =>
-            kaomoji.name.toLowerCase().includes(lowercasedFilter) ||
-            kaomoji.value.includes(lowercasedFilter)
-        );
-
-        if (filtered.length > 0) {
-          return { ...category, kaomojis: filtered };
+      .map(topCategory => {
+        const filteredSubCategories = topCategory.subCategories.map(subCategory => {
+          const filteredKaomojis = subCategory.kaomojis.filter(
+            kaomoji =>
+              kaomoji.name.toLowerCase().includes(lowercasedFilter) ||
+              kaomoji.value.includes(lowercasedFilter)
+          );
+          return { ...subCategory, kaomojis: filteredKaomojis };
+        }).filter(subCategory => subCategory.kaomojis.length > 0);
+        
+        if (filteredSubCategories.length > 0) {
+          return { ...topCategory, subCategories: filteredSubCategories };
         }
         return null;
       })
-      .filter((category): category is KaomojiCategory => category !== null);
+      .filter((category): category is KaomojiTopCategory => category !== null);
   }, [searchTerm]);
-
-  const handleSelectKaomoji = (kaomoji: Kaomoji) => {
-    if (copiedValue) return; 
-
-    navigator.clipboard.writeText(kaomoji.value);
-    setCopiedValue(kaomoji.value);
-
-    setTimeout(() => {
-        setCopiedValue(null);
-        setSelectedKaomoji(kaomoji);
-        window.scrollTo(0, 0);
-    }, 1000);
+  
+  const handleGoToDetail = (kaomoji: Kaomoji) => {
+    setSelectedKaomoji(kaomoji);
+    window.scrollTo(0, 0);
   };
 
-  const handleSelectCategory = (categoryName: string) => {
-    const fullCategory = kaomojiData.find(cat => cat.category === categoryName);
-    if (fullCategory) {
-      setSelectedCategory(fullCategory);
-      window.scrollTo(0, 0);
-    }
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
+    // Visual feedback is now handled within KaomojiCard
+  };
+
+  const handleGoHome = () => {
+    setSelectedKaomoji(null);
+    setSearchTerm('');
+    window.scrollTo(0, 0);
   };
 
   const handleGoBackFromDetail = () => {
     setSelectedKaomoji(null);
   };
 
-  const handleGoBackFromCategory = () => {
-    setSelectedCategory(null);
-  };
+  let pageContent;
 
   if (selectedKaomoji) {
-    return <DetailPage kaomoji={selectedKaomoji} onBack={handleGoBackFromDetail} />;
-  }
-
-  if (selectedCategory) {
-    return (
-      <CategoryPage 
-        category={selectedCategory}
-        onBack={handleGoBackFromCategory}
-        onKaomojiSelect={handleSelectKaomoji}
-        copiedValue={copiedValue}
+    pageContent = (
+      <DetailPage 
+        kaomoji={selectedKaomoji} 
+        onBack={handleGoBackFromDetail}
+        onKaomojiSelect={handleGoToDetail} 
       />
     );
-  }
-
-  return (
-    <div className="bg-gray-50 text-slate-800 font-sans relative">
-       {/* Left Ad Sidebar */}
-      <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
-        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-      </aside>
-
-      {/* Right Ad Sidebar */}
-      <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px]">
-        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-      </aside>
-
-      <div className="container mx-auto px-4 py-8">
+  } else {
+    // Main page content
+    pageContent = (
+      <>
         <Header />
+        <main className="mt-10 grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <aside className="hidden lg:block lg:col-span-1">
+              <CategorySidebar categories={filteredKaomojis} />
+          </aside>
 
-        <main className="mt-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content Column */}
           <div className="lg:col-span-3 space-y-10">
             <section>
               <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -128,17 +109,33 @@ const App: React.FC = () => {
             
             <KaomojiGrid 
               categories={filteredKaomojis} 
-              onKaomojiSelect={handleSelectKaomoji}
-              onCategorySelect={handleSelectCategory}
-              copiedValue={copiedValue}
+              onGoToDetail={handleGoToDetail}
+              onCopy={handleCopy}
             />
           </div>
           
-          {/* Right Sidebar */}
-          <aside className="lg:col-span-1 lg:sticky lg:top-8 h-fit">
+          <aside id="generator" className="lg:col-span-1 lg:sticky lg:top-24 h-fit scroll-mt-24">
             <Generator />
           </aside>
         </main>
+      </>
+    );
+  }
+
+  return (
+    <div className="bg-gray-50 text-slate-800 font-sans min-h-screen flex flex-col">
+       <Navigation onHomeClick={handleGoHome} />
+
+       {/* Ad Sidebars - placed here to be relative to the viewport */}
+      <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px] z-10">
+        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+      </aside>
+      <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px] z-10">
+        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+      </aside>
+
+      <div className="container mx-auto px-4 py-8 flex-grow">
+        {pageContent}
       </div>
       
       <Footer />

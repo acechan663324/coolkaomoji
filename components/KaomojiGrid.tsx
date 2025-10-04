@@ -1,15 +1,14 @@
 import React from 'react';
 import { KaomojiCard } from './KaomojiCard';
-import type { Kaomoji, KaomojiCategory } from '../types';
+import type { Kaomoji, KaomojiTopCategory } from '../types';
 
 interface KaomojiGridProps {
-  categories: KaomojiCategory[];
-  onKaomojiSelect: (kaomoji: Kaomoji) => void;
-  copiedValue: string | null;
-  onCategorySelect?: (categoryName: string) => void;
+  categories: KaomojiTopCategory[];
+  onGoToDetail: (kaomoji: Kaomoji) => void;
+  onCopy: (value: string) => void;
 }
 
-export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiSelect, copiedValue, onCategorySelect }) => {
+export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onGoToDetail, onCopy }) => {
   if (categories.length === 0) {
     return (
       <div className="text-center text-slate-500 py-16">
@@ -20,48 +19,35 @@ export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onKaomojiS
   }
 
   return (
-    <div className="space-y-12">
-      {categories.map((category) => (
-        <section key={category.category}>
-          <div className="border-b-2 border-slate-200 pb-2 mb-4">
-            {onCategorySelect ? (
-              <button 
-                onClick={() => onCategorySelect(category.category)}
-                className="w-full text-left flex justify-between items-center group"
-                aria-label={`View all in ${category.category}`}
-              >
-                <h3 className="text-2xl font-semibold text-cyan-600 group-hover:text-cyan-700 transition-colors">
-                  {category.category}
+    <div className="space-y-16">
+      {categories.map((topCategory) => (
+        <section key={topCategory.category} id={topCategory.category.replace(/\s+/g, '-')} className="scroll-mt-24">
+           <h2 className="text-4xl font-extrabold text-slate-700 mb-8 border-b-4 border-cyan-300 pb-3">
+              {topCategory.category}
+           </h2>
+           <div className="space-y-12">
+            {topCategory.subCategories.map((subCategory) => (
+              <div key={subCategory.subCategory}>
+                <h3 className="text-2xl font-bold text-cyan-600">
+                  {subCategory.subCategory}
                 </h3>
-                <span className="text-sm font-semibold text-cyan-500 group-hover:text-cyan-700 flex items-center gap-1 transition-transform group-hover:translate-x-1">
-                  View all
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </span>
-              </button>
-            ) : (
-              <h3 className="text-2xl font-semibold text-cyan-600">
-                {category.category}
-              </h3>
-            )}
-          </div>
-          <div className="flex flex-wrap items-start justify-start gap-4">
-            {category.kaomojis.map((kaomoji) => (
-              <KaomojiCard 
-                key={`${category.category}-${kaomoji.value}`} 
-                kaomoji={kaomoji.value} 
-                onClick={() => onKaomojiSelect(kaomoji)}
-                title={kaomoji.name}
-              >
-                {copiedValue === kaomoji.value && (
-                    <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
-                        Copied!
-                    </span>
-                )}
-              </KaomojiCard>
+                <p className="mt-2 mb-6 text-slate-600 text-base leading-relaxed">
+                  {subCategory.description}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {subCategory.kaomojis.map((kaomoji) => (
+                    <KaomojiCard 
+                      key={`${subCategory.subCategory}-${kaomoji.name}`}
+                      kaomoji={kaomoji}
+                      onGoToDetail={onGoToDetail}
+                      onCopy={onCopy}
+                      className={kaomoji.isLong ? 'col-span-2' : ''}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
-          </div>
+           </div>
         </section>
       ))}
     </div>

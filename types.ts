@@ -1,11 +1,18 @@
 export interface Kaomoji {
   name: string;
   value: string;
+  isLong?: boolean;
 }
 
-export interface KaomojiCategory {
-  category: string;
+export interface KaomojiSubCategory {
+  subCategory: string;
+  description: string;
   kaomojis: Kaomoji[];
+}
+
+export interface KaomojiTopCategory {
+  category: string;
+  subCategories: KaomojiSubCategory[];
 }
 
 declare global {
