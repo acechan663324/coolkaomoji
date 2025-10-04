@@ -13,8 +13,8 @@ interface DetailPageProps {
 }
 
 const SkeletonCard: React.FC = () => (
-    <div className="bg-slate-800 rounded-lg p-4 h-24 flex items-center justify-center animate-pulse">
-        <div className="w-24 h-6 bg-slate-700 rounded-md"></div>
+    <div className="bg-white border border-slate-200 rounded-lg p-4 h-28 flex items-center justify-center animate-pulse">
+        <div className="w-24 h-6 bg-slate-200 rounded-md"></div>
     </div>
 );
 
@@ -87,15 +87,15 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
         setTimeout(() => setCopiedValue(null), 2000);
     };
 
-    const renderCard = (value: string, key: string | number) => (
+    const renderCard = (value: string, key: string | number, name?: string) => (
         <KaomojiCard
             key={key}
             kaomoji={value}
             onClick={() => handleCopy(value)}
-            title="Click to copy"
+            title={name}
         >
             {copiedValue === value && (
-                <span className="text-cyan-400 font-bold transition-opacity duration-300 opacity-100">
+                <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
                     Copied!
                 </span>
             )}
@@ -103,7 +103,7 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
     );
 
     return (
-        <div className="bg-slate-900 text-white font-sans relative">
+        <div className="bg-gray-50 text-slate-800 font-sans relative">
             {/* Left Ad Sidebar */}
             <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
                 <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
@@ -119,7 +119,7 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
                     {/* Left Column (Detail Content) */}
                     <div className="lg:col-span-3 animate-fade-in">
                         <header className="mb-8">
-                            <button onClick={onBack} className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors duration-200 group">
+                            <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-cyan-600 transition-colors duration-200 group">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                                 </svg>
@@ -128,26 +128,39 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
                         </header>
 
                         <section className="text-center mb-12">
-                            <h1 className="text-3xl font-bold text-slate-200 mb-2">{kaomoji.name}</h1>
-                            {renderCard(kaomoji.value, "main")}
+                            <h1 className="text-3xl font-bold text-slate-800 mb-2">{kaomoji.name}</h1>
+                            <div className="inline-block">
+                                <KaomojiCard
+                                    kaomoji={kaomoji.value}
+                                    onClick={() => handleCopy(kaomoji.value)}
+                                    className="h-32 w-64"
+                                    kaomojiClassName="text-4xl"
+                                >
+                                    {copiedValue === kaomoji.value && (
+                                        <span className="text-cyan-500 font-bold transition-opacity duration-300 opacity-100">
+                                            Copied!
+                                        </span>
+                                    )}
+                                </KaomojiCard>
+                            </div>
                         </section>
 
                         <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4 text-cyan-400 border-b-2 border-slate-700 pb-2">About this Kaomoji</h2>
+                            <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">About this Kaomoji</h2>
                             {isDescriptionLoading && (
                                 <div className="animate-pulse space-y-2">
-                                    <div className="h-4 bg-slate-700 rounded w-full"></div>
-                                    <div className="h-4 bg-slate-700 rounded w-5/6"></div>
+                                    <div className="h-4 bg-slate-200 rounded w-full"></div>
+                                    <div className="h-4 bg-slate-200 rounded w-5/6"></div>
                                 </div>
                             )}
-                            {descriptionError && <p className="text-red-400">{descriptionError}</p>}
+                            {descriptionError && <p className="text-red-500">{descriptionError}</p>}
                             {!isDescriptionLoading && !descriptionError && (
-                                <p className="text-slate-300 leading-relaxed">{description}</p>
+                                <p className="text-slate-600 leading-relaxed">{description}</p>
                             )}
                         </section>
 
                         <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4 text-fuchsia-400 border-b-2 border-slate-700 pb-2">AI-Generated Variations</h2>
+                            <h2 className="text-2xl font-semibold mb-4 text-fuchsia-500 border-b-2 border-slate-200 pb-2">AI-Generated Variations</h2>
                             
                             {!generationAttempted && !isLoading && (
                                 <div className="text-center py-4">
@@ -168,7 +181,7 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
                             
                             {generationAttempted && !isLoading && (
                                 <>
-                                    {error && <p className="text-red-400 text-center py-4">{error}</p>}
+                                    {error && <p className="text-red-500 text-center py-4">{error}</p>}
                                     {!error && variations.length > 0 && (
                                         <div className="flex flex-wrap items-start justify-start gap-4">
                                             {variations.map((v, i) => renderCard(v, i))}
@@ -183,9 +196,9 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack }) => {
 
                         {relatedKaomoji.length > 0 && (
                             <section>
-                                <h2 className="text-2xl font-semibold mb-4 text-cyan-300 border-b-2 border-slate-700 pb-2">Related Kaomoji</h2>
+                                <h2 className="text-2xl font-semibold mb-4 text-cyan-600 border-b-2 border-slate-200 pb-2">Related Kaomoji</h2>
                                 <div className="flex flex-wrap items-start justify-start gap-4">
-                                    {relatedKaomoji.map((k) => renderCard(k.value, k.value))}
+                                    {relatedKaomoji.map((k) => renderCard(k.value, k.value, k.name))}
                                 </div>
                             </section>
                         )}

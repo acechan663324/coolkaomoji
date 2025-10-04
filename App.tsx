@@ -5,6 +5,7 @@ import { KaomojiGrid } from './components/KaomojiGrid';
 import { Generator } from './components/Generator';
 import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
+import { CategoryPage } from './components/CategoryPage';
 import { kaomojiData } from './constants/kaomoji';
 import type { Kaomoji, KaomojiCategory } from './types';
 import { AdsenseAd } from './components/AdsenseAd';
@@ -12,16 +13,16 @@ import { AdsenseAd } from './components/AdsenseAd';
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<KaomojiCategory | null>(null);
   const [copiedValue, setCopiedValue] = useState<string | null>(null);
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
   useEffect(() => {
-    // Set the default title when on the main page, or when returning to it.
-    if (!selectedKaomoji) {
+    if (!selectedKaomoji && !selectedCategory) {
       document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
     }
-  }, [selectedKaomoji]);
+  }, [selectedKaomoji, selectedCategory]);
 
   const filteredKaomojis = useMemo<KaomojiCategory[]>(() => {
     if (!searchTerm.trim()) {
@@ -47,29 +48,51 @@ const App: React.FC = () => {
   }, [searchTerm]);
 
   const handleSelectKaomoji = (kaomoji: Kaomoji) => {
-    if (copiedValue) return; // Prevent multiple clicks while feedback is shown
+    if (copiedValue) return; 
 
     navigator.clipboard.writeText(kaomoji.value);
     setCopiedValue(kaomoji.value);
 
-    // Navigate after a short delay to show copy feedback
     setTimeout(() => {
         setCopiedValue(null);
         setSelectedKaomoji(kaomoji);
-        window.scrollTo(0, 0); // Scroll to top on view change
+        window.scrollTo(0, 0);
     }, 1000);
   };
 
-  const handleGoBack = () => {
+  const handleSelectCategory = (categoryName: string) => {
+    const fullCategory = kaomojiData.find(cat => cat.category === categoryName);
+    if (fullCategory) {
+      setSelectedCategory(fullCategory);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const handleGoBackFromDetail = () => {
     setSelectedKaomoji(null);
   };
 
+  const handleGoBackFromCategory = () => {
+    setSelectedCategory(null);
+  };
+
   if (selectedKaomoji) {
-    return <DetailPage kaomoji={selectedKaomoji} onBack={handleGoBack} />;
+    return <DetailPage kaomoji={selectedKaomoji} onBack={handleGoBackFromDetail} />;
+  }
+
+  if (selectedCategory) {
+    return (
+      <CategoryPage 
+        category={selectedCategory}
+        onBack={handleGoBackFromCategory}
+        onKaomojiSelect={handleSelectKaomoji}
+        copiedValue={copiedValue}
+      />
+    );
   }
 
   return (
-    <div className="bg-slate-900 text-white font-sans relative">
+    <div className="bg-gray-50 text-slate-800 font-sans relative">
        {/* Left Ad Sidebar */}
       <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px]">
         <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
@@ -94,7 +117,7 @@ const App: React.FC = () => {
                     <button
                       key={term}
                       onClick={() => setSearchTerm(term)}
-                      className="px-3 py-1 bg-slate-700 text-slate-300 rounded-full text-sm hover:bg-slate-600 transition-colors duration-200"
+                      className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-sm hover:bg-slate-200 transition-colors duration-200"
                     >
                       {term}
                     </button>
@@ -106,6 +129,7 @@ const App: React.FC = () => {
             <KaomojiGrid 
               categories={filteredKaomojis} 
               onKaomojiSelect={handleSelectKaomoji}
+              onCategorySelect={handleSelectCategory}
               copiedValue={copiedValue}
             />
           </div>

@@ -24,14 +24,14 @@ export const Header: React.FC = () => {
             r="45"
             stroke="url(#logo-gradient)"
             strokeWidth="5"
-            fill="rgba(30, 41, 59, 0.5)"
+            fill="white"
           />
           <text
             x="50"
             y="55"
             fontFamily="monospace, sans-serif"
             fontSize="30"
-            fill="#FFFFFF"
+            fill="#1e293b"
             fontWeight="bold"
             textAnchor="middle"
             dominantBaseline="middle"
@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
           </span>
         </h1>
       </div>
-      <p className="mt-4 text-lg text-slate-400">
+      <p className="mt-4 text-lg text-slate-600">
         Your ultimate destination for finding, copying, and creating the perfect kaomoji for any mood.
       </p>
     </header>

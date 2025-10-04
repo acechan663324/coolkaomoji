@@ -112,3 +112,37 @@ export const generateKaomojiDescription = async (kaomoji: string): Promise<strin
     throw new Error("Failed to generate description. Please try again.");
   }
 };
+
+export const generateCategoryDescription = async (categoryName: string): Promise<string> => {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `Generate a short, one-paragraph creative description for the kaomoji category: "${categoryName}". Explain what kind of emotions or situations this category represents. Your response must be a JSON object with a single key "description" containing the description string.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            description: {
+              type: Type.STRING,
+              description: "The generated category description.",
+            },
+          },
+        },
+        temperature: 0.7,
+      },
+    });
+
+    const jsonString = response.text.trim();
+    const result = JSON.parse(jsonString);
+    
+    if (result && result.description && typeof result.description === 'string') {
+        return result.description;
+    } else {
+        throw new Error("Invalid response format from API for category description.");
+    }
+  } catch (error) {
+    console.error("Error generating category description:", error);
+    throw new Error("Failed to generate description. Please try again.");
+  }
+};

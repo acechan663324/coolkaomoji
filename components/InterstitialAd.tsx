@@ -25,7 +25,7 @@ export const InterstitialAd: React.FC<InterstitialAdProps> = ({ onClose }) => {
                 style={{ width: '300px', height: '250px' }} // Common interstitial size
              />
         </div>
-        <p className="text-slate-400 mt-4 text-sm">You will be redirected shortly...</p>
+        <p className="text-slate-300 mt-4 text-sm">You will be redirected shortly...</p>
     </div>
   );
 };
