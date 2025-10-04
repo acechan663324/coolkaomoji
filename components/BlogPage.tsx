@@ -9,41 +9,150 @@ const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
     </button>
 );
 
-const PlaceholderCard = () => (
-    <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm animate-pulse">
-        <div className="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
-        <div className="space-y-2">
-            <div className="h-3 bg-slate-200 rounded w-full"></div>
-            <div className="h-3 bg-slate-200 rounded w-full"></div>
-            <div className="h-3 bg-slate-200 rounded w-5/6"></div>
-        </div>
-        <div className="h-3 bg-slate-200 rounded w-1/3 mt-6"></div>
-    </div>
-)
-
 interface BlogPageProps {
     onBack: () => void;
 }
+
+const Article: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+    <article className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-left">
+        <h2 className="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-200 pb-4">{title}</h2>
+        <div className="prose prose-slate max-w-none prose-h3:text-cyan-600 prose-h3:font-semibold prose-strong:text-slate-700">
+            {children}
+        </div>
+    </article>
+);
+
 
 export const BlogPage: React.FC<BlogPageProps> = ({ onBack }) => {
     return (
         <div className="animate-fade-in max-w-4xl mx-auto">
             <BackButton onBack={onBack} />
-            <div className="text-center">
+            <header className="text-center mb-12">
                 <h1 className="text-5xl font-extrabold text-slate-800 mb-4">The Kaomoji Blog</h1>
-                <p className="text-xl text-slate-600 mb-12">Insights, History, and Fun with Text Faces!</p>
-                
-                <div className="border-4 border-dashed border-slate-300 rounded-xl p-12 mb-12 text-center">
-                    <h2 className="text-3xl font-bold text-slate-500">Coming Soon!</h2>
-                    <p className="text-slate-500 mt-4">We're preparing some exciting articles for you. Stay tuned!</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                    <PlaceholderCard />
-                    <PlaceholderCard />
-                    <PlaceholderCard />
-                    <PlaceholderCard />
-                </div>
+                <p className="text-xl text-slate-600">Insights, History, and Fun with Text Faces!</p>
+            </header>
+
+            <div className="space-y-12">
+                <Article title="The Expressive World of Kaomoji (顔文字)">
+                    <p>
+                        Welcome to the delightful universe of kaomoji! Unlike Western emoticons like <code>:)</code> that are read sideways, kaomoji are Japanese-style emoticons read horizontally, like <code>(^_^)</code>. They are crafted using a rich combination of characters from different languages to create incredibly detailed and nuanced expressions.
+                    </p>
+                    
+                    <h3>Origins and History</h3>
+                    <p>
+                        Kaomoji originated in Japan in the 1980s on early internet forums like ASCII NET. Users creatively combined standard keyboard characters to express emotions that plain text couldn't convey. This grassroots creativity led to an explosion of styles, from simple smiles to complex, multi-character scenes like the infamous table flip: <code>(╯°□°）╯︵ ┻━┻</code>.
+                    </p>
+
+                    <h3>Main Types of Kaomoji</h3>
+                    <p>
+                        Our site organizes thousands of kaomoji into intuitive categories to help you find the perfect one. The main categories include:
+                    </p>
+                    <ul>
+                        <li><strong>Positive Emotions:</strong> Covering everything from <strong>Joy</strong> <code>( ´ ∀ ` *)</code> to <strong>Love</strong> <code>(♡μ_μ)</code>.</li>
+                        <li><strong>Negative Emotions:</strong> Expressing <strong>Anger</strong> <code>(＃`Д´)</code>, <strong>Sadness</strong> <code>(T_T)</code>, and more.</li>
+                        <li><strong>Neutral Emotions:</strong> For when you're feeling indifferent with a <strong>Shrug</strong> <code>¯\_(ツ)_/¯</code> or confused.</li>
+                        <li><strong>Animals:</strong> A huge collection of creatures like <strong>Cats</strong> <code>(=^･ω･^=)</code> and <strong>Bears</strong> <code>ʕ•ᴥ•ʔ</code>.</li>
+                    </ul>
+
+                    <h3>How to Use on Kaomoji World</h3>
+                    <p>
+                        Finding and using kaomoji here is simple. You can either browse the categories on the main page or use the search bar to look for a specific mood or character. Once you find one you like, just click the <strong>"Copy"</strong> button. It’s now on your clipboard, ready to be pasted! For more options, click on the kaomoji itself or the <strong>"Related"</strong> button to see similar styles.
+                    </p>
+
+                    <h3>Where Can You Use Kaomoji?</h3>
+                    <p>
+                        Almost anywhere you can type! They are incredibly popular on social media platforms like Twitter and Instagram, messaging apps like Discord and Slack, and in online gaming chats to add personality and flair.
+                    </p>
+                </Article>
+
+                <Article title="Emoji: From Pixels to a Global Language">
+                    <p>
+                        Emojis are the small pictographs that have become an indispensable part of modern digital communication. From a simple smiley to a complex flag, emojis help us add tone, emotion, and context to our messages, crossing language barriers in a way words sometimes can't.
+                    </p>
+                    
+                    <h3>Origins and History</h3>
+                    <p>
+                        The first widely used emojis were created in 1999 by Japanese artist Shigetaka Kurita for NTT DoCoMo's mobile internet platform. However, it was their standardization by the <strong>Unicode Consortium</strong> and adoption by major tech companies like Apple and Google in the early 2010s that led to their global explosion. This standardization ensured that an emoji sent from an iPhone would look similar on an Android device or a web browser.
+                    </p>
+
+                    <h3>Main Types of Emoji</h3>
+                    <p>
+                        Our emoji library is organized into standard, easy-to-browse categories:
+                    </p>
+                    <ul>
+                        <li><strong>Smileys & Emotion:</strong> The classic yellow faces expressing a full range of feelings.</li>
+                        <li><strong>People & Body:</strong> Human figures, gestures like <strong>thumbs up</strong> 👍, and body parts.</li>
+                        <li><strong>Animals & Nature:</strong> A digital zoo of animals, plants, and weather.</li>
+                        <li><strong>Food & Drink:</strong> From fruits 🍎 to pizza 🍕 and coffee ☕.</li>
+                        <li><strong>Symbols:</strong> Includes hearts ❤️, signs, and other symbolic characters.</li>
+                    </ul>
+
+                    <h3>How to Use on Kaomoji World</h3>
+                    <p>
+                        Navigate to our dedicated <strong>Emoji</strong> page. You can use the search bar at the top to quickly find what you're looking for (e.g., "heart", "laughing"). Simply click on any emoji in the grid, and it will be instantly copied to your clipboard, confirmed by a "Copied!" tooltip.
+                    </p>
+
+                    <h3>Where Can You Use Emoji?</h3>
+                    <p>
+                        Everywhere! Emojis are natively supported on virtually all modern devices and platforms, including iOS, Android, Windows, macOS, and all major social media apps, email clients, and messaging services.
+                    </p>
+                </Article>
+
+                <Article title="Beyond the Alphabet: A Guide to Special Symbols">
+                    <p>
+                        Beyond the letters and numbers on your keyboard lies a vast universe of special symbols. These characters, ranging from mathematical operators to currency signs and geometric shapes, can be used to add precision, style, and uniqueness to your text.
+                    </p>
+                    
+                    <h3>Origins and History</h3>
+                    <p>
+                        Many symbols have ancient origins. For example, currency signs like the pound sign (£) evolved over centuries, while mathematical symbols like pi (π) were adopted by mathematicians to create a universal language for their work. The digital accessibility of these symbols is thanks to <strong>Unicode</strong>, a standard that assigns a unique code to every character, ensuring they can be displayed consistently across different devices and platforms.
+                    </p>
+
+                    <h3>Main Types of Symbols</h3>
+                    <p>Our Symbol library categorizes these useful characters for easy access:</p>
+                    <ul>
+                        <li><strong>Currency:</strong> Find symbols for various world currencies, like the Euro (€), Yen (¥), and Dollar ($).</li>
+                        <li><strong>Math & Logic:</strong> A collection of operators and symbols like Infinity (∞), Pi (π), and Not Equal (≠).</li>
+                        <li><strong>Arrows:</strong> A huge variety of arrows (→, ↔, ↩) for pointing and direction.</li>
+                        <li><strong>Stars & Flowers:</strong> Decorative symbols (★, ✿, ✨) to add flair to your text.</li>
+                        <li><strong>Greek Alphabet:</strong> Essential for scientific and mathematical notation (α, β, Σ).</li>
+                    </ul>
+
+                    <h3>How to Use on Kaomoji World</h3>
+                    <p>
+                        Head to the <strong>Symbol</strong> page. Like our other libraries, you can search for a symbol by name (e.g., "copyright", "arrow", "star"). A single click on any symbol copies it to your clipboard, making it easy to paste wherever you need it.
+                    </p>
+
+                    <h3>Where Can You Use Symbols?</h3>
+                    <p>
+                        Symbols are incredibly versatile. Use them to create unique usernames for games and social media, format text in documents, write mathematical equations, or add decorative touches to your messages and posts.
+                    </p>
+                </Article>
+
+                <Article title="Create Your Own: An Intro to Our AI Kaomoji Generator">
+                    <p>
+                        Ever wanted a kaomoji that perfectly captures a unique idea but doesn't exist yet? With the power of generative AI, now you can create your own! Our AI tools use a powerful model (Gemini) to understand your descriptions and craft entirely new kaomoji from scratch.
+                    </p>
+                    
+                    <h3>The Technology Behind It</h3>
+                    <p>
+                        Our generator is powered by Google's Gemini model. We've trained this AI to understand the structure, components, and emotional meaning of kaomoji. When you provide a text prompt, it doesn't just search a database; it assembles characters in a creative way to build a new kaomoji that matches your description.
+                    </p>
+
+                    <h3>Our AI Tools: Two Ways to Create</h3>
+                    <p>
+                        We offer two fantastic AI features on our site:
+                    </p>
+                    <ol>
+                        <li><strong>The AI Generator:</strong> Located on the right sidebar of the homepage, this tool lets you generate a kaomoji from any description. Simply type what you want to see (e.g., "a grumpy librarian" or "a dancing robot") into the input box and click <strong>"Generate"</strong>. The AI will create a brand new kaomoji just for you.</li>
+                        <li><strong>AI Variations:</strong> When you click on any existing kaomoji to view its detail page, you'll see a button that says <strong>"Generate with AI"</strong>. Clicking this will prompt the AI to create several creative variations based on that specific kaomoji's style, giving you fresh alternatives.</li>
+                    </ol>
+
+                    <h3>Where Can You Use Your AI Creations?</h3>
+                    <p>
+                        Anywhere you would use a regular kaomoji! The best part is that you'll be using a completely unique emoticon that you brought to life. Share your creations with friends on Discord, Twitter, or in your text messages to show off your creativity.
+                    </p>
+                </Article>
             </div>
         </div>
     );

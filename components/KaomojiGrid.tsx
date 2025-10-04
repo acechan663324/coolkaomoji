@@ -8,6 +8,10 @@ interface KaomojiGridProps {
   onCopy: (value: string) => void;
 }
 
+const createId = (...parts: string[]) => {
+  return parts.map(part => part.replace(/\s+/g, '-')).join('-');
+};
+
 export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onGoToDetail, onCopy }) => {
   if (categories.length === 0) {
     return (
@@ -21,13 +25,17 @@ export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onGoToDeta
   return (
     <div className="space-y-16">
       {categories.map((topCategory) => (
-        <section key={topCategory.category} id={topCategory.category.replace(/\s+/g, '-')} className="scroll-mt-24">
+        <section key={topCategory.category} id={createId(topCategory.category)} className="scroll-mt-24">
            <h2 className="text-4xl font-extrabold text-slate-700 mb-8 border-b-4 border-cyan-300 pb-3">
               {topCategory.category}
            </h2>
            <div className="space-y-12">
             {topCategory.subCategories.map((subCategory) => (
-              <div key={subCategory.subCategory}>
+              <div 
+                key={subCategory.subCategory}
+                id={createId(topCategory.category, subCategory.subCategory)}
+                className="scroll-mt-24"
+              >
                 <h3 className="text-2xl font-bold text-cyan-600">
                   {subCategory.subCategory}
                 </h3>
