@@ -492,7 +492,7 @@ export const kaomojiData: KaomojiTopCategory[] = [
           { name: "Serious Shock", value: "(□_□)" },
           { name: "Dazed Eyes", value: "Σ(□_□)" },
           { name: "Extreme Surprise", value: "∑(O_O;)" },
-          { name: "Horrified", value: "( : ౦ ‸ ౦ : )" 
+          { name: "Horrified", value: "( : ౦ ‸ ౦ : )" },
         ],
       },
     ],
