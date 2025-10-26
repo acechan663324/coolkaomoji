@@ -146,3 +146,34 @@ export const generateCategoryDescription = async (categoryName: string): Promise
     throw new Error("Failed to generate description. Please try again.");
   }
 };
+
+export const generateDigitalArt = async (prompt: string, width: number): Promise<string> => {
+  try {
+    const fullPrompt = `You are an expert ASCII/Unicode artist. Your task is to create a digital painting using a rich palette of symbols, emojis, and kaomojis based on the user's description.
+
+**Rules:**
+1. The generated art MUST be exactly ${width} characters wide per line. Use spaces for padding if necessary to meet this width.
+2. The output MUST ONLY contain the generated art. Do NOT include any explanations, titles, or markdown code fences (\`\`\`).
+
+**User's Description:** "${prompt}"`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: fullPrompt,
+      config: {
+        temperature: 0.5,
+      },
+    });
+
+    const art = response.text;
+    if (!art || typeof art !== 'string' || art.trim().length === 0) {
+        throw new Error("The AI returned an empty response. Please try a different prompt.");
+    }
+    
+    return art;
+    
+  } catch (error) {
+    console.error("Error generating digital art:", error);
+    throw new Error("Failed to generate digital art. The model may be unavailable or the request was blocked.");
+  }
+};

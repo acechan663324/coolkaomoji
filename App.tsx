@@ -15,8 +15,9 @@ import { BlogPage } from './components/BlogPage';
 import { EmojiPage } from './components/EmojiPage';
 import { SymbolPage } from './components/SymbolPage';
 import { KaomojiInfo } from './components/KaomojiInfo';
+import { AIArtGeneratorPage } from './components/AIArtGeneratorPage';
 
-type Page = 'home' | 'detail' | 'how-to-use' | 'blog' | 'emoji' | 'symbol';
+type Page = 'home' | 'detail' | 'how-to-use' | 'blog' | 'emoji' | 'symbol' | 'ai-art';
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('home');
@@ -96,6 +97,9 @@ const App: React.FC = () => {
     }
     if (activePage === 'symbol') {
       return <SymbolPage onBack={() => handleNavigate('home')} />;
+    }
+    if (activePage === 'ai-art') {
+      return <AIArtGeneratorPage onBack={() => handleNavigate('home')} />;
     }
 
     // Default to 'home' page

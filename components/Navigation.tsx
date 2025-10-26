@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type Page = 'home' | 'how-to-use' | 'blog' | 'emoji' | 'symbol';
+type Page = 'home' | 'how-to-use' | 'blog' | 'emoji' | 'symbol' | 'ai-art';
 
 interface NavigationProps {
   onNavigate: (page: Page) => void;
@@ -37,7 +37,8 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
     { name: 'Home', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('home'); } },
     { name: 'How to Use', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('how-to-use'); } },
     { name: 'Blog', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('blog'); } },
-    { name: 'AI Generator', href: '#generator', onClick: handleGeneratorClick },
+    { name: 'AI Art', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('ai-art'); } },
+    { name: 'Kaomoji Gen', href: '#generator', onClick: handleGeneratorClick },
     { name: 'Emoji', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('emoji'); } },
     { name: 'Symbol', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('symbol'); } },
   ];
