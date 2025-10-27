@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
@@ -16,7 +17,7 @@ interface BlogPageProps {
 const Article: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
     <article className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-left">
         <h2 className="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-200 pb-4">{title}</h2>
-        <div className="prose prose-slate max-w-none prose-h3:text-cyan-600 prose-h3:font-semibold prose-strong:text-slate-700">
+        <div className="prose prose-slate max-w-none prose-h3:text-cyan-600 prose-h3:font-semibold prose-strong:text-slate-700 prose-pre:bg-slate-100 prose-pre:p-3 prose-pre:rounded-md prose-pre:text-sm prose-code:font-mono">
             {children}
         </div>
     </article>
@@ -33,6 +34,72 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onBack }) => {
             </header>
 
             <div className="space-y-12">
+                <Article title="Unleash Your Inner Artist: Introducing the AI Digital Art Generator!">
+                    <p>
+                        We're thrilled to announce a brand-new feature on Kaomoji World: the <strong>AI Digital Art Generator!</strong> Ever imagined a scene and wished you could see it painted with symbols, emojis, and kaomojis? Now you can. This powerful new tool, accessible via the "AI Art" link in the navigation, uses generative AI to transform your text descriptions into unique and stunning digital art.
+                    </p>
+
+                    <h3>How It Works</h3>
+                    <p>
+                        Powered by Google's advanced Gemini model, the AI Art Generator interprets your creative prompts and constructs a visual piece line by line. It's not just finding images; it's painting with characters. You control the vision, and the AI handles the brushstrokes.
+                    </p>
+
+                    <h3>How to Create Your Masterpiece</h3>
+                    <p>
+                        Getting started is easy:
+                    </p>
+                    <ol>
+                        <li>Navigate to the <strong>AI Art</strong> page from the main menu.</li>
+                        <li>In the "Your Vision" text box, write a detailed description of the art you want to create. The more descriptive, the better!</li>
+                        <li>Use the "Art Width" slider to control the width (in characters) of each line in your artwork. This is great for adjusting the level of detail.</li>
+                        <li>Click the <strong>✨ Generate Art</strong> button and watch your idea come to life in the display box below.</li>
+                    </ol>
+                    <p>Once generated, you can easily copy the entire piece with the "Copy Art" button to share it anywhere.</p>
+
+                    <h3>Examples to Get You Started</h3>
+                    
+                    <h4>1. A Serene Landscape</h4>
+                    <p>Let's create a peaceful scene. We can describe the key elements we want to see.</p>
+                    <p><strong>Prompt:</strong> <code>A tranquil japanese garden with a stone lantern, a cherry blossom tree, and a koi pond.</code></p>
+                    <p><strong>Result:</strong> The AI will combine elements like <code>🌸</code> for blossoms, <code>🐟</code> for koi, and various block characters to build the structure of the garden, creating a beautiful and calm picture.</p>
+                    <pre>
+{`          , - ~ ~ ~ - .
+      (      🌸      )
+   (   |\\   /|_     )
+  (    |  |'|  |    )
+ (  '  |' |'|' |   ' )
+(     '|' |'|' |'     )
+〰〰🐟〰〰〰〰〰〰〰〰〰〰`}
+                    </pre>
+
+                    <h4>2. A Dynamic Cityscape</h4>
+                    <p>You can also create complex, high-energy scenes. Let's try a futuristic city.</p>
+                    <p><strong>Prompt:</strong> <code>Cyberpunk city skyline at night, with towering neon skyscrapers and flying cars.</code></p>
+                    <p><strong>Result:</strong> Expect to see a vibrant mix of block characters (<code>█ ▓ ▒</code>) forming buildings, colorful symbols for neon lights, and perhaps small kaomoji-like shapes for flying vehicles, capturing that futuristic feel.</p>
+                    <pre>
+{`|~|_| |~|🌃| |~/~
+|_|_| | |~~~| |\\\\ 
+| | | | | 🏙️| |~~\\\\
+  -o- | |   | |  \\\\
+      | |~~~| |   `}
+                    </pre>
+
+                    <h4>3. An Adorable Animal Scene</h4>
+                    <p>The generator is also great at creating cute and simple subjects. The key is to describe the mood and posture.</p>
+                    <p><strong>Prompt:</strong> <code>A fluffy cat sleeping on a stack of books, looking warm and cozy.</code></p>
+                    <p><strong>Result:</strong> The AI will use characters to form the shape of a cat <code>(=^･ω･^=)</code>, combined with symbols representing books <code>📖</code> or stacked lines, and maybe some "zzz"s to show it's asleep.</p>
+                    <pre>
+{`      Z
+     Z
+    Z
+  (=-ω-)_旦
+ c(,_uu_)📚`}
+                    </pre>
+                    <p>
+                        Your imagination is the only limit. Try generating your favorite characters, landscapes, or abstract concepts. We can't wait to see what you create!
+                    </p>
+                </Article>
+
                 <Article title="The Expressive World of Kaomoji (顔文字)">
                     <p>
                         Welcome to the delightful universe of kaomoji! Unlike Western emoticons like <code>:)</code> that are read sideways, kaomoji are Japanese-style emoticons read horizontally, like <code>(^_^)</code>. They are crafted using a rich combination of characters from different languages to create incredibly detailed and nuanced expressions.

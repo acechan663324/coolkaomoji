@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { generateDigitalArt } from '../services/geminiService';
 
 const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
@@ -11,7 +11,7 @@ const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
 );
 
 const LoadingSpinner: React.FC = () => (
-  <div className="w-8 h-8 border-4 border-slate-300 border-t-cyan-400 border-solid rounded-full animate-spin"></div>
+  <div className="w-6 h-6 border-2 border-slate-300 border-t-white border-solid rounded-full animate-spin"></div>
 );
 
 interface AIArtGeneratorPageProps {
@@ -20,18 +20,29 @@ interface AIArtGeneratorPageProps {
 
 export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }) => {
     const [prompt, setPrompt] = useState('');
-    const [width, setWidth] = useState(50);
+    const [width, setWidth] = useState(20);
     const [generatedArt, setGeneratedArt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isCopied, setIsCopied] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const intervalRef = useRef<number | null>(null);
 
+    // FIX: Define examplePrompts to be used as suggestions for the user.
     const examplePrompts = [
-        'A serene mountain landscape at sunrise, with a soaring eagle',
-        'Cosmic cat floating in space among stars and planets',
-        'Enchanted forest with glowing mushrooms and a hidden path',
-        'A bustling cyberpunk city street at night with neon signs',
+        'A cat sleeping on a stack of books',
+        'Cyberpunk city skyline at night',
+        'A magical forest with glowing mushrooms',
+        'A robot holding a red skateboard',
     ];
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, []);
 
     const handleGenerate = async (promptOverride?: string) => {
         const finalPrompt = promptOverride || prompt;
@@ -44,6 +55,20 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
         setIsLoading(true);
         setError(null);
         setGeneratedArt('');
+        setProgress(0);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+
+        intervalRef.current = window.setInterval(() => {
+            setProgress(p => {
+                if (p >= 95) {
+                    if (intervalRef.current) clearInterval(intervalRef.current);
+                    return 95;
+                }
+                const remaining = 95 - p;
+                const increment = Math.max(1, Math.floor(remaining / 10));
+                return p + increment;
+            });
+        }, 200);
 
         try {
             const result = await generateDigitalArt(finalPrompt, width);
@@ -51,7 +76,13 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred.');
         } finally {
-            setIsLoading(false);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setProgress(100);
+            setTimeout(() => {
+                setIsLoading(false);
+                setProgress(0);
+            }, 500);
         }
     };
     
@@ -93,8 +124,8 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
                         <input
                             id="art-width"
                             type="range"
-                            min="30"
-                            max="100"
+                            min="5"
+                            max="30"
                             value={width}
                             onChange={(e) => setWidth(Number(e.target.value))}
                             className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
@@ -107,7 +138,12 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
                         disabled={isLoading || !prompt.trim()}
                         className="w-full px-6 py-4 bg-fuchsia-600 text-white text-lg font-bold rounded-lg hover:bg-fuchsia-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition duration-300 flex items-center justify-center gap-3"
                     >
-                        {isLoading ? <LoadingSpinner /> : '✨ Generate Art'}
+                        {isLoading ? (
+                            <>
+                                <LoadingSpinner />
+                                <span>Generating...</span>
+                            </>
+                        ) : '✨ Generate Art'}
                     </button>
                 </div>
 
@@ -130,7 +166,7 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
                 <div className="mt-10">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold text-slate-800">Generated Art</h2>
-                        {generatedArt && !isLoading && (
+                        {!isLoading && generatedArt && (
                              <button
                                 onClick={handleCopy}
                                 className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors duration-200 ${
@@ -144,13 +180,23 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
                         )}
                     </div>
                     <div className="bg-slate-900 text-white rounded-lg p-4 min-h-[200px] flex items-center justify-center overflow-x-auto">
-                        {isLoading && <LoadingSpinner />}
-                        {error && <p className="text-red-400 text-center">{error}</p>}
-                        {!isLoading && !error && !generatedArt && (
-                            <p className="text-slate-400">Your digital art will appear here...</p>
-                        )}
-                        {generatedArt && (
+                        {isLoading ? (
+                            <div className="w-full max-w-md text-center">
+                                <p className="text-slate-300 font-mono text-xl mb-4">{Math.floor(progress)}%</p>
+                                <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+                                    <div
+                                    className="bg-gradient-to-r from-cyan-400 to-fuchsia-500 h-3 rounded-full transition-all duration-300 ease-linear"
+                                    style={{ width: `${progress}%` }}
+                                    ></div>
+                                </div>
+                                <p className="mt-4 text-slate-400 animate-pulse">Generating your masterpiece...</p>
+                            </div>
+                        ) : error ? (
+                            <p className="text-red-400 text-center">{error}</p>
+                        ) : generatedArt ? (
                             <pre className="font-mono text-sm whitespace-pre">{generatedArt}</pre>
+                        ) : (
+                            <p className="text-slate-400">Your digital art will appear here...</p>
                         )}
                     </div>
                 </div>

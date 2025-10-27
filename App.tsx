@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
@@ -132,6 +133,22 @@ const App: React.FC = () => {
               </div>
             </section>
             
+            <section>
+              <div className="bg-white border-2 border-fuchsia-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-sm font-bold uppercase text-fuchsia-500 tracking-wider">From the Blog</h3>
+                <h2 className="text-2xl font-bold text-slate-800 mt-2">Unleash Your Inner Artist: Introducing the AI Digital Art Generator!</h2>
+                <p className="text-slate-600 mt-3">
+                  Transform your text descriptions into unique and stunning digital art. Learn how to use our new AI-powered tool to create everything from serene landscapes to cyberpunk cities, all with symbols and emojis.
+                </p>
+                <button 
+                  onClick={() => handleNavigate('blog')}
+                  className="mt-4 px-5 py-2 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 transition duration-300"
+                >
+                  Read More...
+                </button>
+              </div>
+            </section>
+
             <KaomojiGrid 
               categories={filteredKaomojis} 
               onGoToDetail={handleGoToDetail}
