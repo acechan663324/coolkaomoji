@@ -204,7 +204,7 @@ export const Generator: React.FC<GeneratorProps> = ({
       <h2 className="text-3xl font-bold text-center mb-2 text-fuchsia-500">AI Kaomoji Generator</h2>
       <p className="text-center text-slate-600 mb-6">Describe a kaomoji and let AI bring it to life!</p>
       
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <input
           type="text"
           value={prompt}
@@ -214,18 +214,8 @@ export const Generator: React.FC<GeneratorProps> = ({
           className="w-full px-4 py-3 bg-gray-50 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-300"
           disabled={mode === 'full' ? isLoading : false}
         />
-        <button
-          onClick={() => handleGenerate()}
-          disabled={buttonDisabled}
-          className="w-full px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition duration-300 flex items-center justify-center gap-2"
-        >
-          {mode === 'full' && isLoading ? <LoadingSpinner /> : 'Generate'}
-        </button>
-      </div>
 
-      <div className="mt-6 border-t border-slate-200 pt-6">
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Settings</h3>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="flex flex-col gap-2">
             <span className="text-sm font-medium text-slate-600">Mood</span>
             <select
@@ -255,6 +245,14 @@ export const Generator: React.FC<GeneratorProps> = ({
             </select>
           </label>
         </div>
+
+        <button
+          onClick={() => handleGenerate()}
+          disabled={buttonDisabled}
+          className="w-full px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition duration-300 flex items-center justify-center gap-2"
+        >
+          {mode === 'full' && isLoading ? <LoadingSpinner /> : 'Generate'}
+        </button>
       </div>
 
       {mode === 'full' && (
