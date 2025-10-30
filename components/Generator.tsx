@@ -94,6 +94,7 @@ export const Generator: React.FC<GeneratorProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const lastAutoGenerateTokenRef = useRef<number | undefined>();
+  const promptInputRef = useRef<HTMLInputElement>(null);
 
   const handleGenerate = useCallback(
     async (promptOverride?: string, settingsOverride?: GeneratorSettings) => {
@@ -205,23 +206,39 @@ export const Generator: React.FC<GeneratorProps> = ({
       <p className="text-center text-slate-600 mb-6">Describe a kaomoji and let AI bring it to life!</p>
       
       <div className="flex flex-col gap-4">
-        <input
-          type="text"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="e.g., 'a cat hiding in a box'"
-          className="w-full px-4 py-3 bg-gray-50 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-300"
-          disabled={mode === 'full' ? isLoading : false}
-        />
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="kaomoji-generator-prompt"
+            className="text-sm font-medium text-slate-600"
+          >
+            Prompt
+          </label>
+          <div
+            className="relative cursor-text"
+            onClick={() => promptInputRef.current?.focus()}
+            role="presentation"
+          >
+            <input
+              id="kaomoji-generator-prompt"
+              ref={promptInputRef}
+              type="text"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="e.g., 'a cat hiding in a box'"
+              className="w-full h-14 px-4 bg-gray-50 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-300"
+              disabled={mode === 'full' ? isLoading : false}
+            />
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label className="flex flex-col gap-2">
+          <label className="flex flex-col gap-2 w-full cursor-pointer">
             <span className="text-sm font-medium text-slate-600">Mood</span>
             <select
               value={settings.tone}
               onChange={handleToneChange}
-              className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-200"
+              className="w-full h-12 px-3 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-200 cursor-pointer"
             >
               {Object.entries(toneOptionLabels).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -230,12 +247,12 @@ export const Generator: React.FC<GeneratorProps> = ({
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-2">
+          <label className="flex flex-col gap-2 w-full cursor-pointer">
             <span className="text-sm font-medium text-slate-600">Complexity</span>
             <select
               value={settings.complexity}
               onChange={handleComplexityChange}
-              className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition duration-200"
+              className="w-full h-12 px-3 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-200 cursor-pointer"
             >
               {Object.entries(complexityOptionLabels).map(([value, label]) => (
                 <option key={value} value={value}>
