@@ -3,11 +3,16 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
 import { KaomojiGrid } from './components/KaomojiGrid';
-import { Generator } from './components/Generator';
+import {
+  Generator,
+  type GeneratorPreviewRequest,
+  type GeneratorSettings,
+  createDefaultGeneratorSettings,
+} from './components/Generator';
 import { Footer } from './components/Footer';
 import { DetailPage } from './components/DetailPage';
 import { kaomojiData } from './constants/kaomoji';
-import type { Kaomoji, KaomojiTopCategory } from './types';
+import type { Kaomoji, KaomojiTopCategory, Page } from './types';
 import { AdsenseAd } from './components/AdsenseAd';
 import { Navigation } from './components/Navigation';
 import { CategorySidebar } from './components/CategorySidebar';
@@ -17,21 +22,35 @@ import { EmojiPage } from './components/EmojiPage';
 import { SymbolPage } from './components/SymbolPage';
 import { KaomojiInfo } from './components/KaomojiInfo';
 import { AIArtGeneratorPage } from './components/AIArtGeneratorPage';
-
-type Page = 'home' | 'detail' | 'how-to-use' | 'blog' | 'emoji' | 'symbol' | 'ai-art';
+import { GeneratorPage } from './components/GeneratorPage';
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('home');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedKaomoji, setSelectedKaomoji] = useState<Kaomoji | null>(null);
+  const [generatorConfig, setGeneratorConfig] = useState<{
+    prompt: string;
+    settings: GeneratorSettings;
+    autoGenerateToken: number;
+  }>(() => ({
+    prompt: '',
+    settings: createDefaultGeneratorSettings(),
+    autoGenerateToken: 0,
+  }));
 
   const exampleSearches = ['happy', 'crying', 'cat', 'dance', 'shrug', 'love'];
 
   useEffect(() => {
-    if (activePage !== 'detail') {
-      document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
+    if (activePage === 'detail' && selectedKaomoji) {
+      document.title = `${selectedKaomoji.name} | Kaomoji World`;
+      return;
     }
-  }, [activePage]);
+    if (activePage === 'generator') {
+      document.title = 'AI Kaomoji Generator - Kaomoji World';
+      return;
+    }
+    document.title = 'Kaomoji World - AI Kaomoji Generator & Finder';
+  }, [activePage, selectedKaomoji]);
 
   const filteredKaomojis = useMemo<KaomojiTopCategory[]>(() => {
     if (!searchTerm.trim()) {
@@ -76,6 +95,15 @@ const App: React.FC = () => {
     navigator.clipboard.writeText(value);
   };
 
+  const handleGeneratorPreviewSubmit = (request: GeneratorPreviewRequest) => {
+    setGeneratorConfig((prev) => ({
+      prompt: request.prompt,
+      settings: { ...request.settings },
+      autoGenerateToken: prev.autoGenerateToken + 1,
+    }));
+    handleNavigate('generator');
+  };
+
   const renderPageContent = () => {
     if (activePage === 'detail' && selectedKaomoji) {
       return (
@@ -101,6 +129,16 @@ const App: React.FC = () => {
     }
     if (activePage === 'ai-art') {
       return <AIArtGeneratorPage onBack={() => handleNavigate('home')} />;
+    }
+    if (activePage === 'generator') {
+      return (
+        <GeneratorPage
+          initialPrompt={generatorConfig.prompt}
+          initialSettings={generatorConfig.settings}
+          autoGenerateToken={generatorConfig.autoGenerateToken}
+          onBack={() => handleNavigate('home')}
+        />
+      );
     }
 
     // Default to 'home' page
@@ -156,8 +194,13 @@ const App: React.FC = () => {
             />
           </div>
           
-          <aside id="generator" className="lg:col-span-1 lg:sticky lg:top-24 h-fit scroll-mt-24">
-            <Generator />
+          <aside className="lg:col-span-1 lg:sticky lg:top-24 h-fit scroll-mt-24">
+            <Generator
+              mode="preview"
+              initialPrompt={generatorConfig.prompt}
+              initialSettings={generatorConfig.settings}
+              onPreviewSubmit={handleGeneratorPreviewSubmit}
+            />
           </aside>
         </main>
       </>

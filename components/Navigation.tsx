@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-type Page = 'home' | 'how-to-use' | 'blog' | 'emoji' | 'symbol' | 'ai-art';
+import type { Page } from '../types';
 
 interface NavigationProps {
   onNavigate: (page: Page) => void;
@@ -9,45 +8,27 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleGeneratorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onNavigate('home');
-    
-    setTimeout(() => {
-        const generatorElement = document.getElementById('generator');
-        if (generatorElement) {
-            generatorElement.scrollIntoView({ behavior: 'smooth' });
-            const generatorCard = generatorElement.firstElementChild;
-            if (generatorCard) {
-                generatorCard.classList.add('ring-2', 'ring-fuchsia-500', 'ring-offset-2', 'transition-all', 'duration-500', 'rounded-xl');
-                setTimeout(() => {
-                    generatorCard.classList.remove('ring-2', 'ring-fuchsia-500', 'ring-offset-2', 'rounded-xl');
-                }, 2000);
-            }
-        }
-    }, 100);
-  };
-
-  const createNavLinkHandler = (handler: (e: React.MouseEvent<HTMLAnchorElement>) => void) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    handler(e);
-    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-  };
-
-  const navLinks = [
-    { name: 'Home', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('home'); } },
-    { name: 'How to Use', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('how-to-use'); } },
-    { name: 'Blog', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('blog'); } },
-    { name: 'AI Art', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('ai-art'); } },
-    { name: 'Kaomoji Gen', href: '#generator', onClick: handleGeneratorClick },
-    { name: 'Emoji', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('emoji'); } },
-    { name: 'Symbol', href: '#', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); onNavigate('symbol'); } },
+  const navLinks: Array<{ name: string; page: Page }> = [
+    { name: 'Home', page: 'home' },
+    { name: 'How to Use', page: 'how-to-use' },
+    { name: 'Blog', page: 'blog' },
+    { name: 'AI Art', page: 'ai-art' },
+    { name: 'Kaomoji Gen', page: 'generator' },
+    { name: 'Emoji', page: 'emoji' },
+    { name: 'Symbol', page: 'symbol' },
   ];
 
   const renderNavLinks = () => navLinks.map((link) => (
     <a
       key={link.name}
-      href={link.href}
-      onClick={createNavLinkHandler(link.onClick)}
+      href="#"
+      onClick={(e) => {
+        e.preventDefault();
+        onNavigate(link.page);
+        if (isMobileMenuOpen) {
+          setIsMobileMenuOpen(false);
+        }
+      }}
       className="block md:inline-block py-2 px-4 md:p-0 text-slate-600 hover:text-cyan-500 transition-colors duration-200 font-medium"
     >
       {link.name}

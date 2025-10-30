@@ -15,6 +15,16 @@ export interface KaomojiTopCategory {
   subCategories: KaomojiSubCategory[];
 }
 
+export type Page =
+  | 'home'
+  | 'detail'
+  | 'how-to-use'
+  | 'blog'
+  | 'emoji'
+  | 'symbol'
+  | 'ai-art'
+  | 'generator';
+
 declare global {
     interface Window {
         adsbygoogle?: unknown[];
