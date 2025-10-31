@@ -201,86 +201,89 @@ export const Generator: React.FC<GeneratorProps> = ({
   const buttonDisabled = mode === 'full' ? isLoading || !prompt.trim() : !prompt.trim();
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-lg">
-      <h2 className="text-3xl font-bold text-center mb-2 text-fuchsia-500">AI Kaomoji Generator</h2>
-      <p className="text-center text-slate-600 mb-6">Describe a kaomoji and let AI bring it to life!</p>
+    <div className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/60 p-6 shadow-[0_28px_80px_rgba(15,23,42,0.15)] backdrop-blur-2xl sm:p-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(173,216,255,0.3),_transparent_65%)]" />
+      <div className="relative">
+        <h2 className="text-center text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500">AI Kaomoji Generator</h2>
+        <p className="mt-2 text-center text-sm text-slate-500">Describe a kaomoji and let AI bring it to life.</p>
       
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor="kaomoji-generator-prompt"
-            className="text-sm font-medium text-slate-600"
-          >
-            Prompt
-          </label>
-          <div
-            className="relative cursor-text"
-            onClick={() => promptInputRef.current?.focus()}
-            role="presentation"
-          >
-            <input
-              id="kaomoji-generator-prompt"
-              ref={promptInputRef}
-              type="text"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g., 'a cat hiding in a box'"
-              className="w-full h-14 px-4 bg-gray-50 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-300"
-              disabled={mode === 'full' ? isLoading : false}
-            />
+        <div className="mt-6 flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="kaomoji-generator-prompt"
+              className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400"
+            >
+              Prompt
+            </label>
+            <div
+              className="relative cursor-text rounded-2xl border border-white/60 bg-white/70 p-[1px] shadow-[0_14px_40px_rgba(15,23,42,0.12)]"
+              onClick={() => promptInputRef.current?.focus()}
+              role="presentation"
+            >
+              <input
+                id="kaomoji-generator-prompt"
+                ref={promptInputRef}
+                type="text"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g., 'a cat hiding in a box'"
+                className="w-full rounded-[22px] border border-white/50 bg-white/80 px-5 py-4 text-sm text-slate-700 placeholder-slate-400 shadow-inner focus:border-transparent focus:outline-none focus:ring-4 focus:ring-cyan-200/70"
+                disabled={mode === 'full' ? isLoading : false}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label className="flex flex-col gap-2 w-full cursor-pointer">
-            <span className="text-sm font-medium text-slate-600">Mood</span>
-            <select
-              value={settings.tone}
-              onChange={handleToneChange}
-              className="w-full h-12 px-3 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-200 cursor-pointer"
-            >
-              {Object.entries(toneOptionLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex flex-col gap-2 w-full cursor-pointer">
-            <span className="text-sm font-medium text-slate-600">Complexity</span>
-            <select
-              value={settings.complexity}
-              onChange={handleComplexityChange}
-              className="w-full h-12 px-3 border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent transition duration-200 cursor-pointer"
-            >
-              {Object.entries(complexityOptionLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="flex w-full cursor-pointer flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">Mood</span>
+              <select
+                value={settings.tone}
+                onChange={handleToneChange}
+                className="w-full rounded-2xl border border-white/60 bg-white/70 px-3 py-3 text-sm text-slate-600 shadow-[0_12px_30px_rgba(15,23,42,0.1)] backdrop-blur-xl transition duration-200 focus:border-transparent focus:outline-none focus:ring-4 focus:ring-cyan-200/70"
+              >
+                {Object.entries(toneOptionLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex w-full cursor-pointer flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">Complexity</span>
+              <select
+                value={settings.complexity}
+                onChange={handleComplexityChange}
+                className="w-full rounded-2xl border border-white/60 bg-white/70 px-3 py-3 text-sm text-slate-600 shadow-[0_12px_30px_rgba(15,23,42,0.1)] backdrop-blur-xl transition duration-200 focus:border-transparent focus:outline-none focus:ring-4 focus:ring-cyan-200/70"
+              >
+                {Object.entries(complexityOptionLabels).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-        <button
-          onClick={() => handleGenerate()}
-          disabled={buttonDisabled}
-          className="w-full px-6 py-3 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition duration-300 flex items-center justify-center gap-2"
-        >
-          {mode === 'full' && isLoading ? <LoadingSpinner /> : 'Generate'}
-        </button>
+          <button
+            onClick={() => handleGenerate()}
+            disabled={buttonDisabled}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_rgba(14,165,233,0.35)] transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          >
+            {mode === 'full' && isLoading ? <LoadingSpinner /> : 'Generate'}
+          </button>
+        </div>
       </div>
 
       {mode === 'full' && (
-        <div className="mt-4 text-center">
-          <div className="flex flex-wrap gap-2 justify-center">
-            <span className="text-slate-500 text-sm self-center">Try an example:</span>
+        <div className="relative mt-6 text-center">
+          <div className="flex flex-wrap justify-center gap-2">
+            <span className="self-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Try an example</span>
             {examplePrompts.map((p) => (
               <button
                 key={p}
                 onClick={() => handleGenerate(p)}
-                className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-sm hover:bg-slate-200 transition-colors duration-200"
+                className="rounded-full border border-white/60 bg-white/60 px-3 py-1 text-xs font-medium text-slate-600 shadow-[0_10px_25px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-transform duration-200 hover:-translate-y-0.5 hover:text-cyan-500"
                 disabled={isLoading}
               >
                 {p}
@@ -291,9 +294,9 @@ export const Generator: React.FC<GeneratorProps> = ({
       )}
 
       {mode === 'full' && (
-        <div className="mt-6 min-h-[144px] flex items-center justify-center bg-gray-100 rounded-lg p-4">
+        <div className="mt-6 flex min-h-[144px] items-center justify-center rounded-2xl border border-white/50 bg-white/50 p-4 shadow-inner backdrop-blur-xl">
           {isLoading && <LoadingSpinner />}
-          {error && <p className="text-red-500 text-center">{error}</p>}
+          {error && <p className="text-center text-sm text-red-500">{error}</p>}
           {generatedKaomoji && (
             <KaomojiCard
               kaomoji={generatedKaomoji}
@@ -305,7 +308,7 @@ export const Generator: React.FC<GeneratorProps> = ({
             />
           )}
           {!isLoading && !error && !generatedKaomoji && (
-            <p className="text-slate-400">Your generated kaomoji will appear here...</p>
+            <p className="text-sm text-slate-400">Your generated kaomoji will appear here...</p>
           )}
         </div>
       )}

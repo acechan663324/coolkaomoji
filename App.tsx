@@ -157,12 +157,12 @@ const App: React.FC = () => {
             <section>
               <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
               <div className="mt-4">
-                <div className="flex flex-wrap gap-2 justify-start">
+                <div className="flex flex-wrap justify-start gap-3">
                   {exampleSearches.map((term) => (
                     <button
                       key={term}
                       onClick={() => setSearchTerm(term)}
-                      className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-sm hover:bg-slate-200 transition-colors duration-200"
+                      className="rounded-full border border-white/50 bg-white/60 px-4 py-1.5 text-sm font-medium text-slate-600 shadow-[0_12px_30px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 hover:text-cyan-500"
                     >
                       {term}
                     </button>
@@ -172,18 +172,21 @@ const App: React.FC = () => {
             </section>
             
             <section>
-              <div className="bg-white border-2 border-fuchsia-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <h3 className="text-sm font-bold uppercase text-fuchsia-500 tracking-wider">From the Blog</h3>
-                <h2 className="text-2xl font-bold text-slate-800 mt-2">Unleash Your Inner Artist: Introducing the AI Digital Art Generator!</h2>
-                <p className="text-slate-600 mt-3">
+            <div className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/60 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.15)] transition-transform duration-500 hover:-translate-y-1 hover:shadow-[0_40px_120px_rgba(15,23,42,0.22)]">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,212,250,0.28),_transparent_60%)]" />
+                <div className="relative">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.5em] text-slate-400">From the blog</h3>
+                  <h2 className="mt-4 text-2xl font-semibold text-slate-800 sm:text-3xl">Unleash Your Inner Artist: Introducing the AI Digital Art Generator!</h2>
+                  <p className="mt-4 text-base leading-relaxed text-slate-600">
                   Transform your text descriptions into unique and stunning digital art. Learn how to use our new AI-powered tool to create everything from serene landscapes to cyberpunk cities, all with symbols and emojis.
-                </p>
-                <button 
-                  onClick={() => handleNavigate('blog')}
-                  className="mt-4 px-5 py-2 bg-fuchsia-600 text-white font-semibold rounded-lg hover:bg-fuchsia-700 transition duration-300"
-                >
-                  Read More...
-                </button>
+                  </p>
+                  <button 
+                    onClick={() => handleNavigate('blog')}
+                    className="mt-6 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-2 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(14,165,233,0.35)] transition-transform duration-300 hover:-translate-y-0.5"
+                  >
+                    Read More
+                  </button>
+                </div>
               </div>
             </section>
 
@@ -208,22 +211,41 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 text-slate-800 font-sans min-h-screen flex flex-col">
-       <Navigation onNavigate={handleNavigate} />
-
-       {/* Ad Sidebars - placed here to be relative to the viewport */}
-      <aside className="hidden 2xl:block fixed top-20 left-8 w-[160px] h-[600px] z-10">
-        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-      </aside>
-      <aside className="hidden 2xl:block fixed top-20 right-8 w-[160px] h-[600px] z-10">
-        <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
-      </aside>
-
-      <div className="container mx-auto px-4 py-8 flex-grow">
-        {renderPageContent()}
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f4f6ff] via-[#f9fbff] to-[#eef4ff] text-slate-800 font-sans">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-36 -left-32 h-80 w-80 rounded-full bg-[#9be7fb]/60 blur-3xl" />
+        <div className="absolute top-1/4 right-[-12%] h-[340px] w-[340px] rounded-full bg-[#fbc2eb]/50 blur-[80px]" />
+        <div className="absolute bottom-[-18%] left-[20%] h-[420px] w-[420px] rounded-full bg-[#c7d8ff]/60 blur-[100px]" />
       </div>
-      
-      <Footer />
+
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <Navigation onNavigate={handleNavigate} />
+
+        {/* Ad Sidebars - placed here to be relative to the viewport */}
+        <aside className="hidden 2xl:block fixed top-24 left-10 z-10 w-[160px]">
+          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+            <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+          </div>
+        </aside>
+        <aside className="hidden 2xl:block fixed top-24 right-10 z-10 w-[160px]">
+          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+            <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+          </div>
+        </aside>
+
+        <div className="flex-grow">
+          <div className="container mx-auto px-4 py-12">
+            <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/60 p-6 shadow-[0_40px_120px_rgba(15,23,42,0.12)] backdrop-blur-3xl sm:p-10">
+              <div className="pointer-events-none absolute inset-x-16 top-0 h-24 rounded-b-[32px] bg-gradient-to-b from-white/70 via-white/40 to-transparent" />
+              <div className="relative">
+                {renderPageContent()}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Footer />
+      </div>
     </div>
   );
 };

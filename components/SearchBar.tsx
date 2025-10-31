@@ -7,10 +7,10 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div className="relative">
-      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+    <div className="relative rounded-full border border-white/60 bg-white/50 p-[1px] shadow-[0_12px_40px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+      <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
         <svg
-          className="w-5 h-5 text-slate-400"
+          className="h-5 w-5 text-slate-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -29,7 +29,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm 
         placeholder="Search for 'happy', 'cat', 'dance'..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-full text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300"
+        className="w-full rounded-full border border-white/40 bg-white/70 py-3 pl-12 pr-5 text-base text-slate-700 placeholder-slate-400 shadow-inner focus:border-transparent focus:outline-none focus:ring-4 focus:ring-cyan-200/70"
       />
     </div>
   );

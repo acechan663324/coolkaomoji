@@ -3,9 +3,9 @@ import React from 'react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full py-4 mt-12 border-t border-slate-200">
-      <div className="container mx-auto text-center text-slate-500">
-        <p>Built by Kaomoji Team</p>
+    <footer className="mt-12 w-full border-t border-white/60 bg-white/50 backdrop-blur-2xl">
+      <div className="container mx-auto px-4 py-6 text-center text-slate-500">
+        <p className="text-sm">Built with care by the Kaomoji Team</p>
       </div>
     </footer>
   );

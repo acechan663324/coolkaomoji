@@ -42,9 +42,9 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
   };
 
   return (
-    <nav>
-      <h3 className="text-lg font-semibold text-slate-800 mb-4 tracking-wide">Categories</h3>
-      <ul className="space-y-1 border-l-2 border-slate-200">
+    <nav className="rounded-[24px] border border-white/60 bg-white/60 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.45em] text-slate-400">Categories</h3>
+      <ul className="space-y-1 border-l border-white/50">
         {categories.map(topCategory => {
           const topCategoryId = createId(topCategory.category);
           const isExpanded = expandedCategories.has(topCategory.category);
@@ -52,7 +52,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
             <li key={topCategory.category}>
               <button
                 onClick={() => handleToggleAndScroll(topCategory.category, topCategoryId)}
-                className="flex justify-between items-center w-full font-semibold text-slate-700 hover:text-cyan-500 transition-all duration-200 -ml-0.5 pl-4 py-1.5 border-l-2 border-transparent hover:border-cyan-500 text-left"
+                className="flex w-full items-center justify-between border-l-2 border-transparent pl-4 py-2 text-left text-sm font-medium text-slate-600 transition-all duration-300 hover:border-cyan-300 hover:text-cyan-500"
                 aria-expanded={isExpanded}
                 aria-controls={`${topCategoryId}-subnav`}
               >
@@ -69,7 +69,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
               </button>
               
               {isExpanded && (
-                <ul id={`${topCategoryId}-subnav`} className="mt-1 mb-2 space-y-1.5">
+                <ul id={`${topCategoryId}-subnav`} className="mb-2 mt-1 space-y-1.5">
                   {topCategory.subCategories.map(subCategory => {
                     const subCategoryId = createId(topCategory.category, subCategory.subCategory);
                     return (
@@ -77,7 +77,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
                         <a
                           href={`#${subCategoryId}`}
                           onClick={(e) => handleAnchorClick(e, subCategoryId)}
-                          className="block text-sm text-slate-500 hover:text-cyan-500 transition-colors duration-200 pl-8 py-1"
+                          className="block rounded-full pl-8 py-1 text-xs font-medium text-slate-500 transition-colors duration-200 hover:text-cyan-500"
                         >
                           {subCategory.subCategory}
                         </a>
