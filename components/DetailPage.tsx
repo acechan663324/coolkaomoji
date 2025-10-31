@@ -28,15 +28,6 @@ export const DetailPage: React.FC<DetailPageProps> = ({ kaomoji, onBack, onKaomo
     const [descriptionError, setDescriptionError] = useState<string | null>(null);
 
     useEffect(() => {
-        const originalTitle = document.title;
-        document.title = `${kaomoji.name} ${kaomoji.value} | Kaomoji World`;
-    
-        return () => {
-          document.title = originalTitle;
-        };
-    }, [kaomoji]);
-
-    useEffect(() => {
         const fetchDescription = async () => {
             setIsDescriptionLoading(true);
             setDescriptionError(null);
