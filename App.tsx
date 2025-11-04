@@ -39,7 +39,7 @@ const AppLayout: React.FC = () => {
         </aside>
 
         <div className="flex-grow">
-          <div className="container mx-auto px-4 py-12">
+          <div className="w-full px-4 py-12 sm:px-6 lg:px-8 2xl:px-[220px]">
             <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/60 p-6 shadow-[0_40px_120px_rgba(15,23,42,0.12)] backdrop-blur-3xl sm:p-10">
               <div className="pointer-events-none absolute inset-x-16 top-0 h-24 rounded-b-[32px] bg-gradient-to-b from-white/70 via-white/40 to-transparent" />
               <div className="relative">
