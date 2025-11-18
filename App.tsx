@@ -13,6 +13,7 @@ import { AIArtRoute } from './pages/AIArtRoute';
 import { GeneratorRoute } from './pages/GeneratorRoute';
 import { KaomojiDetailRoute } from './pages/KaomojiDetailRoute';
 import { NotFoundRoute } from './pages/NotFoundRoute';
+import { CategoryRoute } from './pages/CategoryRoute';
 import { ADSENSE_CLIENT_ID, ADSENSE_SLOT_IDS } from './constants/adsense';
 
 const AppLayout: React.FC = () => {
@@ -75,6 +76,7 @@ const App: React.FC = () => {
         <Route path="generator" element={<GeneratorRoute />} />
         <Route path="emoji" element={<EmojiRoute />} />
         <Route path="symbol" element={<SymbolRoute />} />
+        <Route path="category/:categorySlug" element={<CategoryRoute />} />
         <Route path="kaomoji/:slug" element={<KaomojiDetailRoute />} />
         <Route path="*" element={<NotFoundRoute />} />
       </Route>

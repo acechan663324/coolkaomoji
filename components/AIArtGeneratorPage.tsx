@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { generateDigitalArt } from '../services/geminiService';
+import { generateDigitalArt } from '../services/openAIService';
 
 const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
     <button onClick={onBack} className="flex items-center gap-2 text-slate-500 hover:text-cyan-600 transition-colors duration-200 group mb-8">

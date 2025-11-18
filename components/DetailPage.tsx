@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { generateKaomojiVariations, generateKaomojiDescription } from '../services/geminiService';
+import { generateKaomojiVariations, generateKaomojiDescription } from '../services/openAIService';
 import { kaomojiData } from '../constants/kaomoji';
 import type { Kaomoji, KaomojiSubCategory } from '../types';
 import { KaomojiCard } from './KaomojiCard';

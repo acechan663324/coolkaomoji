@@ -33,3 +33,11 @@ export const createKaomojiSlug = (kaomoji: Kaomoji): string => {
   const suffix = hashFragment(kaomoji.value).slice(0, 6);
   return `${safeBase}-${suffix}`;
 };
+
+/**
+ * Creates a slug for a top-level kaomoji category.
+ */
+export const createCategorySlug = (categoryName: string): string => {
+  const base = slugify(categoryName);
+  return base.length > 0 ? base : 'category';
+};

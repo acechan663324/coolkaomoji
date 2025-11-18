@@ -15,6 +15,13 @@ View your app in AI Studio: https://ai.studio/apps/drive/1MH3LQIcAL47-d52cZ-JHup
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Set the `VITE_OPENAI_API_KEY` (or `OPENAI_API_KEY`) in [.env.local](.env.local) to your OpenAI API key.  
+   - Optional: override the default model by setting `VITE_OPENAI_MODEL` (defaults to `gpt-4o-mini`).
 3. Run the app:
    `npm run dev`
+
+### Deploying to Pages or other hosts
+
+- Add an environment variable named `VITE_OPENAI_API_KEY` (or `OPENAI_API_KEY`) in your hosting provider's dashboard so the build step can inject the key.  
+- Optionally expose `VITE_OPENAI_MODEL` if you want to use a different OpenAI model.  
+- Existing `VITE_GEMINI_API_KEY` values are ignored unless the OpenAI variables are missing, so you can keep older configs as a fallback.

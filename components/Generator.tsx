@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { generateKaomoji } from '../services/geminiService';
+import { generateKaomoji } from '../services/openAIService';
 import { KaomojiCard } from './KaomojiCard';
 import type { Kaomoji } from '../types';
 

@@ -153,7 +153,12 @@ export const HomeRoute: React.FC = () => {
             </div>
           </section>
 
-          <KaomojiGrid categories={filteredKaomojis} onGoToDetail={handleGoToDetail} onCopy={handleCopy} />
+          <KaomojiGrid
+            categories={filteredKaomojis}
+            onGoToDetail={handleGoToDetail}
+            onCopy={handleCopy}
+            showCategoryLinks
+          />
         </div>
 
         <aside className="h-fit scroll-mt-24 lg:sticky lg:top-24 lg:col-span-1">
