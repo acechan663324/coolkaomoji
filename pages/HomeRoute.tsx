@@ -122,7 +122,7 @@ export const HomeRoute: React.FC = () => {
                   <button
                     key={term}
                     onClick={() => setSearchTerm(term)}
-                    className="rounded-full border border-white/50 bg-white/60 px-4 py-1.5 text-sm font-medium text-slate-600 shadow-[0_12px_30px_rgba(15,23,42,0.1)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 hover:text-cyan-500"
+                    className="rounded-full border border-white/50 bg-white/60 px-4 py-1.5 text-sm font-medium text-slate-600 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5 hover:text-cyan-500"
                   >
                     {term}
                   </button>
@@ -132,7 +132,7 @@ export const HomeRoute: React.FC = () => {
           </section>
 
           <section>
-            <div className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/60 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.15)] transition-transform duration-500 hover:-translate-y-1 hover:shadow-[0_40px_120px_rgba(15,23,42,0.22)]">
+            <div className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/60 p-8 transition-transform duration-500 hover:-translate-y-1">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,212,250,0.28),_transparent_60%)]" />
               <div className="relative">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.5em] text-slate-400">From the blog</h3>
@@ -145,7 +145,7 @@ export const HomeRoute: React.FC = () => {
                 </p>
                 <button
                   onClick={() => navigate('/blog')}
-                  className="mt-6 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-2 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(14,165,233,0.35)] transition-transform duration-300 hover:-translate-y-0.5"
+                  className="mt-6 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-2 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
                 >
                   Read More
                 </button>

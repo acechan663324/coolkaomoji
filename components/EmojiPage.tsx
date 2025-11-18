@@ -81,13 +81,13 @@ export const EmojiPage: React.FC<EmojiPageProps> = ({ onBack }) => {
                                         <button
                                             onClick={() => handleCopy(emoji)}
                                             title={name}
-                                            className="w-full aspect-square flex items-center justify-center text-3xl bg-white rounded-lg border border-slate-200 hover:shadow-md hover:border-cyan-400 hover:-translate-y-1 transition-all duration-200"
+                                            className="w-full aspect-square flex items-center justify-center text-3xl bg-white rounded-lg border border-slate-200 hover:border-cyan-400 hover:-translate-y-1 transition-all duration-200"
                                             aria-label={`Copy emoji: ${name}`}
                                         >
                                             {emoji}
                                         </button>
                                         {copiedEmoji === emoji && (
-                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-semibold px-2 py-1 rounded-md shadow-lg animate-fade-in-out">
+                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-semibold px-2 py-1 rounded-md animate-fade-in-out">
                                                 Copied!
                                             </div>
                                         )}

@@ -30,7 +30,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-white/70 bg-white/40 shadow-[0_16px_40px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+    <nav className="sticky top-0 z-40 w-full border-b border-white/70 bg-white/40 backdrop-blur-2xl">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
@@ -66,7 +66,7 @@ export const Navigation: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="rounded-full bg-white/50 p-2 text-slate-600 shadow-[0_8px_20px_rgba(15,23,42,0.12)] transition-colors duration-200 hover:text-cyan-500 focus:outline-none"
+              className="rounded-full bg-white/50 p-2 text-slate-600 transition-colors duration-200 hover:text-cyan-500 focus:outline-none"
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}
             >

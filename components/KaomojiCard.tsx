@@ -5,10 +5,11 @@ interface KaomojiCardProps {
   kaomoji: Kaomoji;
   onCopy: (value: string) => void;
   onGoToDetail: (kaomoji: Kaomoji) => void;
+  isWide?: boolean;
   className?: string;
 }
 
-export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoToDetail, className }) => {
+export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoToDetail, isWide = false, className = '' }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = (e: React.MouseEvent) => {
@@ -25,7 +26,7 @@ export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoT
 
   return (
     <div
-      className={`group relative flex h-36 flex-col items-center justify-between overflow-hidden rounded-2xl border border-white/60 bg-white/60 p-3 text-center shadow-[0_18px_45px_rgba(15,23,42,0.12)] backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.22)] ${className}`}
+      className={`group relative flex h-36 flex-col items-center justify-between overflow-hidden rounded-2xl border border-white/60 bg-white/60 p-3 text-center backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(148,187,233,0.35),_transparent_55%)]" />
@@ -37,7 +38,9 @@ export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoT
         role="button"
         aria-label={`View details for ${kaomoji.name}`}
       >
-        <span className="px-2 text-2xl font-mono whitespace-nowrap overflow-x-auto text-slate-700">
+        <span
+          className={`px-2 font-mono whitespace-nowrap overflow-x-auto text-slate-700 ${isWide ? 'text-xl md:text-2xl' : 'text-2xl'}`}
+        >
           {kaomoji.value}
         </span>
       </div>
@@ -56,8 +59,8 @@ export const KaomojiCard: React.FC<KaomojiCardProps> = ({ kaomoji, onCopy, onGoT
             onClick={handleCopy}
             className={`w-full py-1.5 rounded-md transition-colors duration-200 ${
               isCopied
-                ? 'bg-emerald-500 text-white shadow-[0_10px_25px_rgba(16,185,129,0.35)]'
-                : 'bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 text-white shadow-[0_12px_28px_rgba(14,165,233,0.32)] hover:brightness-105'
+                ? 'bg-emerald-500 text-white'
+                : 'bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 text-white hover:brightness-105'
             }`}
           >
             {isCopied ? 'Copied!' : 'Copy'}

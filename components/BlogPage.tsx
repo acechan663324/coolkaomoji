@@ -15,7 +15,7 @@ interface BlogPageProps {
 }
 
 const Article: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-    <article className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-left">
+    <article className="bg-white p-8 rounded-xl border border-slate-200 text-left">
         <h2 className="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-slate-200 pb-4">{title}</h2>
         <div className="prose prose-slate max-w-none prose-h3:text-cyan-600 prose-h3:font-semibold prose-strong:text-slate-700 prose-pre:bg-slate-100 prose-pre:p-3 prose-pre:rounded-md prose-pre:text-sm prose-code:font-mono">
             {children}

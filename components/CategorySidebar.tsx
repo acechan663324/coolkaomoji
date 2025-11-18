@@ -42,7 +42,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories }) 
   };
 
   return (
-    <nav className="rounded-[24px] border border-white/60 bg-white/60 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+    <nav className="rounded-[24px] border border-white/60 bg-white/60 p-6 backdrop-blur-2xl">
       <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.45em] text-slate-400">Categories</h3>
       <ul className="space-y-1 border-l border-white/50">
         {categories.map(topCategory => {

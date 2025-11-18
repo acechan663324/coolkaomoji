@@ -2,10 +2,10 @@ import React from 'react';
 
 export const Header: React.FC = () => {
   return (
-    <header className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/50 px-6 py-12 text-center shadow-[0_28px_80px_rgba(15,23,42,0.18)] backdrop-blur-2xl sm:px-10">
+    <header className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/50 px-6 py-12 text-center backdrop-blur-2xl sm:px-10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.75),_rgba(255,255,255,0))]" />
       <div className="relative flex flex-col items-center gap-6">
-        <div className="flex items-center justify-center gap-4 rounded-full border border-white/60 bg-white/70 px-6 py-3 shadow-[0_12px_30px_rgba(15,23,42,0.1)]">
+        <div className="flex items-center justify-center gap-4 rounded-full border border-white/60 bg-white/70 px-6 py-3">
           {/* SVG Logo Icon */}
           <svg
             width="56"

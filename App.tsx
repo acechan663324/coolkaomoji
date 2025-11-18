@@ -13,6 +13,7 @@ import { AIArtRoute } from './pages/AIArtRoute';
 import { GeneratorRoute } from './pages/GeneratorRoute';
 import { KaomojiDetailRoute } from './pages/KaomojiDetailRoute';
 import { NotFoundRoute } from './pages/NotFoundRoute';
+import { ADSENSE_CLIENT_ID, ADSENSE_SLOT_IDS } from './constants/adsense';
 
 const AppLayout: React.FC = () => {
   return (
@@ -28,19 +29,27 @@ const AppLayout: React.FC = () => {
         <ScrollToTop />
 
         <aside className="fixed left-10 top-24 hidden w-[160px] 2xl:block">
-          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl">
-            <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 backdrop-blur-xl">
+            <AdsenseAd
+              client={ADSENSE_CLIENT_ID}
+              slot={ADSENSE_SLOT_IDS.sidebar}
+              style={{ width: '160px', height: '600px' }}
+            />
           </div>
         </aside>
         <aside className="fixed right-10 top-24 hidden w-[160px] 2xl:block">
-          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl">
-            <AdsenseAd client="ca-pub-3685000706717214" slot="2760671227" style={{ width: '160px', height: '600px' }} />
+          <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/50 backdrop-blur-xl">
+            <AdsenseAd
+              client={ADSENSE_CLIENT_ID}
+              slot={ADSENSE_SLOT_IDS.sidebar}
+              style={{ width: '160px', height: '600px' }}
+            />
           </div>
         </aside>
 
         <div className="flex-grow">
           <div className="w-full px-4 py-12 sm:px-6 lg:px-8 2xl:px-[220px]">
-            <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/60 p-6 shadow-[0_40px_120px_rgba(15,23,42,0.12)] backdrop-blur-3xl sm:p-10">
+            <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/60 p-6 backdrop-blur-3xl sm:p-10">
               <div className="pointer-events-none absolute inset-x-16 top-0 h-24 rounded-b-[32px] bg-gradient-to-b from-white/70 via-white/40 to-transparent" />
               <div className="relative">
                 <Outlet />

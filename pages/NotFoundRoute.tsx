@@ -24,13 +24,13 @@ export const NotFoundRoute: React.FC = () => {
         <div className="flex flex-wrap justify-center gap-3">
           <Link
             to="/"
-            className="rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-2 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(14,165,233,0.32)] transition-transform duration-200 hover:-translate-y-0.5"
+            className="rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-2 text-sm font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5"
           >
             Go Home
           </Link>
           <Link
             to="/how-to-use"
-            className="rounded-full border border-white/60 bg-white/60 px-6 py-2 text-sm font-semibold text-slate-600 shadow-[0_12px_30px_rgba(15,23,42,0.12)] backdrop-blur-xl transition-transform duration-200 hover:-translate-y-0.5 hover:text-cyan-500"
+            className="rounded-full border border-white/60 bg-white/60 px-6 py-2 text-sm font-semibold text-slate-600 backdrop-blur-xl transition-transform duration-200 hover:-translate-y-0.5 hover:text-cyan-500"
           >
             Learn Kaomoji Basics
           </Link>

@@ -2,7 +2,7 @@ import React from 'react';
 
 export const KaomojiInfo: React.FC = () => {
   return (
-    <div className="mt-8 rounded-[24px] border border-white/60 bg-white/60 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+    <div className="mt-8 rounded-[24px] border border-white/60 bg-white/60 p-6 backdrop-blur-2xl">
       <h3 className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-400">What is a Kaomoji?</h3>
       <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-600">
         <p>

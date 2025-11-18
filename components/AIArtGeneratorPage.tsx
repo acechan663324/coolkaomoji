@@ -96,7 +96,7 @@ export const AIArtGeneratorPage: React.FC<AIArtGeneratorPageProps> = ({ onBack }
     return (
         <div className="animate-fade-in max-w-4xl mx-auto">
             <BackButton onBack={onBack} />
-            <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 border border-slate-200">
+            <div className="bg-white rounded-xl p-8 md:p-12 border border-slate-200">
                 <header className="text-center mb-10">
                     <h1 className="text-5xl font-extrabold text-slate-800 mb-4">
                         AI Digital Art Generator

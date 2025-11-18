@@ -12,6 +12,32 @@ const createId = (...parts: string[]) => {
   return parts.map(part => part.replace(/\s+/g, '-')).join('-');
 };
 
+const WIDE_VISUAL_LENGTH_THRESHOLD = 20;
+
+const estimateVisualLength = (value: string) => {
+  return Array.from(value).reduce((length, char) => {
+    const codePoint = char.codePointAt(0) ?? 0;
+
+    if (codePoint > 0xff) {
+      return length + 2;
+    }
+
+    if (char === ' ') {
+      return length + 0.5;
+    }
+
+    return length + 1;
+  }, 0);
+};
+
+const shouldUseWideLayout = (kaomoji: Kaomoji) => {
+  if (typeof kaomoji.isLong === 'boolean') {
+    return kaomoji.isLong;
+  }
+
+  return estimateVisualLength(kaomoji.value) > WIDE_VISUAL_LENGTH_THRESHOLD;
+};
+
 export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onGoToDetail, onCopy }) => {
   if (categories.length === 0) {
     return (
@@ -45,16 +71,20 @@ export const KaomojiGrid: React.FC<KaomojiGridProps> = ({ categories, onGoToDeta
                 <p className="mt-2 mb-6 text-slate-600 text-base leading-relaxed">
                   {subCategory.description}
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {subCategory.kaomojis.map((kaomoji) => (
-                    <KaomojiCard 
-                      key={`${subCategory.subCategory}-${kaomoji.name}`}
-                      kaomoji={kaomoji}
-                      onGoToDetail={onGoToDetail}
-                      onCopy={onCopy}
-                      className={kaomoji.isLong ? 'col-span-2' : ''}
-                    />
-                  ))}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 grid-flow-row-dense">
+                  {subCategory.kaomojis.map((kaomoji) => {
+                    const isWide = shouldUseWideLayout(kaomoji);
+                    return (
+                      <KaomojiCard
+                        key={`${subCategory.subCategory}-${kaomoji.name}`}
+                        kaomoji={kaomoji}
+                        onGoToDetail={onGoToDetail}
+                        onCopy={onCopy}
+                        isWide={isWide}
+                        className={isWide ? 'col-span-2' : undefined}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             ))}
