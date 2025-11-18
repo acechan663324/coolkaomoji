@@ -1,16 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY?.trim();
+let ai: GoogleGenAI | null = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
-}
+const getClient = () => {
+  if (!API_KEY || !ai) {
+    throw new Error("AI features are unavailable because the Gemini API key is not configured.");
+  }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+  return ai;
+};
 
 export const generateKaomoji = async (prompt: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getClient();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Generate a single, unique kaomoji based on this description: "${prompt}". Your response must be a JSON object with a single key "kaomoji" containing the kaomoji string. Do not include any other text, explanation, or markdown formatting.`,
       config: {
@@ -44,7 +48,8 @@ export const generateKaomoji = async (prompt: string): Promise<string> => {
 
 export const generateKaomojiVariations = async (baseKaomoji: string): Promise<string[]> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getClient();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Generate 4 creative variations based on the kaomoji: "${baseKaomoji}". Your response must be a JSON object with a single key "variations", which is an array of strings, each string being a new kaomoji. Do not include the original kaomoji.`,
       config: {
@@ -81,7 +86,8 @@ export const generateKaomojiVariations = async (baseKaomoji: string): Promise<st
 
 export const generateKaomojiDescription = async (kaomoji: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getClient();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Generate a short, creative description for the kaomoji "${kaomoji}". Explain its likely meaning, emotion, and common usage scenarios in 1-2 sentences. Your response must be a JSON object with a single key "description" containing the description string.`,
       config: {
@@ -115,7 +121,8 @@ export const generateKaomojiDescription = async (kaomoji: string): Promise<strin
 
 export const generateCategoryDescription = async (categoryName: string): Promise<string> => {
   try {
-    const response = await ai.models.generateContent({
+    const client = getClient();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Generate a short, one-paragraph creative description for the kaomoji category: "${categoryName}". Explain what kind of emotions or situations this category represents. Your response must be a JSON object with a single key "description" containing the description string.`,
       config: {
@@ -157,7 +164,8 @@ export const generateDigitalArt = async (prompt: string, width: number): Promise
 
 **User's Description:** "${prompt}"`;
 
-    const response = await ai.models.generateContent({
+    const client = getClient();
+    const response = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: fullPrompt,
       config: {
