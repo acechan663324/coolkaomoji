@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
-const navLinks: Array<{ name: string; path: string }> = [
-  { name: 'Home', path: '/' },
-  { name: 'How to Use', path: '/how-to-use' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'AI Art', path: '/ai-art' },
-  { name: 'Kaomoji Gen', path: '/generator' },
-  { name: 'Emoji', path: '/emoji' },
-  { name: 'Symbol', path: '/symbol' },
-];
+import { menuRoutes } from '../constants/routes';
 
 const getLinkClasses = (isActive: boolean): string => {
   const base =
@@ -56,13 +47,15 @@ export const Navigation: React.FC = () => {
           </NavLink>
 
           <div className="hidden items-center space-x-8 md:flex">
-            {navLinks.map(({ name, path }) => (
-              <NavLink key={path} to={path} className={({ isActive }) => getLinkClasses(isActive)}>
-                {name}
-              </NavLink>
-            ))}
+            {menuRoutes.map(({ key, path, label, index }) => {
+              const to = path ? `/${path}` : '/';
+              return (
+                <NavLink key={key} to={to} end={Boolean(index)} className={({ isActive }) => getLinkClasses(isActive)}>
+                  {label}
+                </NavLink>
+              );
+            })}
           </div>
-
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
@@ -85,16 +78,20 @@ export const Navigation: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-white/70 bg-white/60 backdrop-blur-xl">
           <div className="container mx-auto flex flex-col space-y-2 px-4 py-4">
-            {navLinks.map(({ name, path }) => (
-              <NavLink
-                key={path}
-                to={path}
-                onClick={closeMobileMenu}
-                className={({ isActive }) => getLinkClasses(isActive)}
-              >
-                {name}
-              </NavLink>
-            ))}
+            {menuRoutes.map(({ key, path, label, index }) => {
+              const to = path ? `/${path}` : '/';
+              return (
+                <NavLink
+                  key={key}
+                  to={to}
+                  end={Boolean(index)}
+                  onClick={closeMobileMenu}
+                  className={({ isActive }) => getLinkClasses(isActive)}
+                >
+                  {label}
+                </NavLink>
+              );
+            })}
           </div>
         </div>
       )}

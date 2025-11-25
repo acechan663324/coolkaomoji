@@ -4,17 +4,8 @@ import { AdsenseAd } from './components/AdsenseAd';
 import { Footer } from './components/Footer';
 import { Navigation } from './components/Navigation';
 import { ScrollToTop } from './components/ScrollToTop';
-import { HomeRoute } from './pages/HomeRoute';
-import { HowToUseRoute } from './pages/HowToUseRoute';
-import { BlogRoute } from './pages/BlogRoute';
-import { EmojiRoute } from './pages/EmojiRoute';
-import { SymbolRoute } from './pages/SymbolRoute';
-import { AIArtRoute } from './pages/AIArtRoute';
-import { GeneratorRoute } from './pages/GeneratorRoute';
-import { KaomojiDetailRoute } from './pages/KaomojiDetailRoute';
-import { NotFoundRoute } from './pages/NotFoundRoute';
-import { CategoryRoute } from './pages/CategoryRoute';
 import { ADSENSE_CLIENT_ID, ADSENSE_SLOT_IDS } from './constants/adsense';
+import { menuRoutes, supplementalRoutes } from './constants/routes';
 
 const AppLayout: React.FC = () => {
   return (
@@ -69,16 +60,16 @@ const App: React.FC = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route index element={<HomeRoute />} />
-        <Route path="how-to-use" element={<HowToUseRoute />} />
-        <Route path="blog" element={<BlogRoute />} />
-        <Route path="ai-art" element={<AIArtRoute />} />
-        <Route path="generator" element={<GeneratorRoute />} />
-        <Route path="emoji" element={<EmojiRoute />} />
-        <Route path="symbol" element={<SymbolRoute />} />
-        <Route path="category/:categorySlug" element={<CategoryRoute />} />
-        <Route path="kaomoji/:slug" element={<KaomojiDetailRoute />} />
-        <Route path="*" element={<NotFoundRoute />} />
+        {menuRoutes.map(({ key, element, index, path }) =>
+          index ? (
+            <Route key={key} index element={element} />
+          ) : (
+            <Route key={key} path={path} element={element} />
+          ),
+        )}
+        {supplementalRoutes.map(({ key, path, element }) => (
+          <Route key={key} path={path} element={element} />
+        ))}
       </Route>
     </Routes>
   );
