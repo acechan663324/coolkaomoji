@@ -9,6 +9,23 @@ import { SymbolRoute } from '../pages/SymbolRoute';
 import { CategoryRoute } from '../pages/CategoryRoute';
 import { KaomojiDetailRoute } from '../pages/KaomojiDetailRoute';
 import { NotFoundRoute } from '../pages/NotFoundRoute';
+import { menuRouteMeta, supplementalRouteMeta } from './routeMeta';
+
+const menuRouteComponents: Record<string, React.ReactElement> = {
+  home: <HomeRoute />,
+  'how-to-use': <HowToUseRoute />,
+  blog: <BlogRoute />,
+  'ai-art': <AIArtRoute />,
+  generator: <GeneratorRoute />,
+  emoji: <EmojiRoute />,
+  symbol: <SymbolRoute />,
+};
+
+const supplementalRouteComponents: Record<string, React.ReactElement> = {
+  category: <CategoryRoute />,
+  'kaomoji-detail': <KaomojiDetailRoute />,
+  'not-found': <NotFoundRoute />,
+};
 
 export interface MenuRouteConfig {
   key: string;
@@ -18,51 +35,13 @@ export interface MenuRouteConfig {
   index?: boolean;
 }
 
-export const menuRoutes: MenuRouteConfig[] = [
-  {
-    key: 'home',
-    path: '',
-    label: 'Home',
-    element: <HomeRoute />,
-    index: true,
-  },
-  {
-    key: 'how-to-use',
-    path: 'how-to-use',
-    label: 'How to Use',
-    element: <HowToUseRoute />,
-  },
-  {
-    key: 'blog',
-    path: 'blog',
-    label: 'Blog',
-    element: <BlogRoute />,
-  },
-  {
-    key: 'ai-art',
-    path: 'ai-art',
-    label: 'AI Art',
-    element: <AIArtRoute />,
-  },
-  {
-    key: 'generator',
-    path: 'generator',
-    label: 'Kaomoji Gen',
-    element: <GeneratorRoute />,
-  },
-  {
-    key: 'emoji',
-    path: 'emoji',
-    label: 'Emoji',
-    element: <EmojiRoute />,
-  },
-  {
-    key: 'symbol',
-    path: 'symbol',
-    label: 'Symbol',
-    element: <SymbolRoute />,
-  },
-];
+export const menuRoutes: MenuRouteConfig[] = menuRouteMeta.map((meta) => {
+  const element = menuRouteComponents[meta.key];
+  if (!element) {
+    throw new Error(`Missing component mapping for menu route "${meta.key}"`);
+  }
+  return { ...meta, element };
+});
 
 interface SupplementalRouteConfig {
   key: string;
@@ -70,20 +49,10 @@ interface SupplementalRouteConfig {
   element: React.ReactElement;
 }
 
-export const supplementalRoutes: SupplementalRouteConfig[] = [
-  {
-    key: 'category',
-    path: 'category/:categorySlug',
-    element: <CategoryRoute />,
-  },
-  {
-    key: 'kaomoji-detail',
-    path: 'kaomoji/:slug',
-    element: <KaomojiDetailRoute />,
-  },
-  {
-    key: 'not-found',
-    path: '*',
-    element: <NotFoundRoute />,
-  },
-];
+export const supplementalRoutes: SupplementalRouteConfig[] = supplementalRouteMeta.map((meta) => {
+  const element = supplementalRouteComponents[meta.key];
+  if (!element) {
+    throw new Error(`Missing component mapping for supplemental route "${meta.key}"`);
+  }
+  return { ...meta, element };
+});

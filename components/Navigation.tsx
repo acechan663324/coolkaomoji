@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { menuRoutes } from '../constants/routes';
+import { menuRouteMeta } from '../constants/routeMeta';
 
 const getLinkClasses = (isActive: boolean): string => {
   const base =
@@ -47,7 +47,7 @@ export const Navigation: React.FC = () => {
           </NavLink>
 
           <div className="hidden items-center space-x-8 md:flex">
-            {menuRoutes.map(({ key, path, label, index }) => {
+            {menuRouteMeta.map(({ key, path, label, index }) => {
               const to = path ? `/${path}` : '/';
               return (
                 <NavLink key={key} to={to} end={Boolean(index)} className={({ isActive }) => getLinkClasses(isActive)}>
@@ -78,7 +78,7 @@ export const Navigation: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-white/70 bg-white/60 backdrop-blur-xl">
           <div className="container mx-auto flex flex-col space-y-2 px-4 py-4">
-            {menuRoutes.map(({ key, path, label, index }) => {
+            {menuRouteMeta.map(({ key, path, label, index }) => {
               const to = path ? `/${path}` : '/';
               return (
                 <NavLink

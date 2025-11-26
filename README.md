@@ -19,6 +19,8 @@ View your app in AI Studio: https://ai.studio/apps/drive/1MH3LQIcAL47-d52cZ-JHup
    - Optional: override the default model by setting `VITE_OPENAI_MODEL` (defaults to `gpt-4o-mini`).
 3. Run the app:
    `npm run dev`
+4. (Optional) Regenerate the sitemap before deploying:
+   `npm run generate:sitemap`
 
 ### Deploying to Pages or other hosts
 
